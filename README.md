@@ -4,6 +4,7 @@
 <div align="center">
 
 **Wi-Fi MQTT client example for the Nordic Semiconductor nRF54LM20-DK with nRF7002EB2 Wi-Fi board,**
+
 **using Zephyr and the nRF Connect SDK.**
 
 Connect the **nRF54LM20-DK** to a Wi-Fi network, establish an **MQTT client session**, subscribe to a topic from an embedded C application and print certain data to a display.
