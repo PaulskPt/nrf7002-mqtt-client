@@ -384,20 +384,21 @@ This creates a simple two-way MQTT test loop between the development board and a
 
 ## Main files to study
 
-| File / folder | Purpose |
-|---|---|
-| `prj.conf` | Main Wi-Fi, MQTT, networking, ZBus and Zephyr configuration |
-| `Kconfig` | Application-level configuration menu and module Kconfig includes |
-| `CMakeLists.txt` | Adds the common code and application modules to the Zephyr build |
-| `src/modules/network/` | Wi-Fi and network connection logic |
-| `src/modules/transport/` | MQTT transport implementation (added file: transport.h) |
-| `src/modules/sampler/` | Message or payload generation logic |
-| `src/modules/trigger/` | Periodic publishing trigger |
-| `src/modules/error/` | Error handling |
-| `src/modules/led/` | Optional LED status indication |
-| `src/modules/display/`| Display handling (see also: file: `dst_table_west`) |
-| `src/modules/telemetry/`| signalling MQTT Connection status to the Display module |
-
++--------------------------+------------------------------------------------------------------+
+| File / folder            | Purpose                                                          |
++--------------------------+------------------------------------------------------------------+
+| `prj.conf`               | Main Wi-Fi, MQTT, networking, ZBus and Zephyr configuration      |
+| `Kconfig`                | Application-level configuration menu and module Kconfig includes |
+| `CMakeLists.txt`         | Adds the common code and application modules to the Zephyr build |
+| `src/modules/network/`   | Wi-Fi and network connection logic                               |
+| `src/modules/transport/` | MQTT transport implementation (added file: transport.h)          |
+| `src/modules/sampler/`   | Message or payload generation logic                              |
+| `src/modules/trigger/`   | Periodic publishing trigger                                      |
+| `src/modules/error/`     | Error handling                                                   |
+| `src/modules/led/`       | Optional LED status indication                                   |
+| `src/modules/display/`   | Display handling (see also: file: `dst_table_west`)              |
+| `src/modules/telemetry/` | signalling MQTT Connection status to the Display module          |
++--------------------------+------------------------------------------------------------------+
 
 ---
 
