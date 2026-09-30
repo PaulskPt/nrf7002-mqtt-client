@@ -314,7 +314,8 @@ When a build fails, delete the build directory
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west flash -d build
 ```
 
-```Deactivate virtual environment
+To deactivate virtual environment
+
 ```Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ deactivate +<Enter>
 
