@@ -518,13 +518,9 @@ Check that:
 
 ## Related resources
 
-- [Technical article: nRF7002 MQTT Client Example](https://abluethinginthecloud.com/nrf7002-mqtt-client-example/)
-- [Getting started with nRF54LM20-DK](https://abluethinginthecloud.com/getting-started-with-nrf7002/)
+- [Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
+- [nRF7002EB2 shield](https://nrfconnectdocs.nordicsemi.com/ncs/latest/zephyr/boards/shields/nrf7002eb2/doc/index.html)
 - [nRF7002 BSD Socket Examples](https://abluethinginthecloud.com/nrf7002-dk-bsd-socket-examples/)
-- [Firmware development services](https://abluethinginthecloud.com/services/firmware-development/)
-- [PCB design services](https://abluethinginthecloud.com/services/pcb-design/)
-- [A Blue Thing In The Cloud website](https://abluethinginthecloud.com/)
-- [A Blue Thing In The Cloud on YouTube](https://www.youtube.com/@abluethinginthecloud)
 
 ---
 
@@ -552,4 +548,4 @@ Do not contact `A Blue Thing In The Cloud` for questions regarding this version 
 
 ## License
 
-This project is licensed under the **GPL-3.0 License**. See the [`LICENSE`](./LICENSE) file for details.
+This nRF54LM20-DK project is licensed under the **MIT License**. See the [`LICENSE`](./LICENSE) file for details.
