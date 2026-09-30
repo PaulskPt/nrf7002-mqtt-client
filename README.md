@@ -189,6 +189,7 @@ CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID="clientID"  # in my case: "NordicMQTTClie
 CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"
 CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 ```
+```
 +------------------------------------------------|--------------------------------------------------------------------------+
 | Option                                         | Description                                                              |
 +------------------------------------------------|--------------------------------------------------------------------------+
@@ -201,8 +202,10 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE`         | Message periodically published by the board                              |
 | `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS`   | Publishing period in seconds                                             |
 +------------------------------------------------|--------------------------------------------------------------------------+
+```
 
 ```Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
+
 In this file the following config topics are handled:
 - Logging
 - Wi-Fi
@@ -219,11 +222,6 @@ In this file the following config topics are handled:
 - Stack sizes
 - Heap sizes
 - Posix API memory optimizations
-
-
-
-
-
 
 
 ```Kconfig.transport
