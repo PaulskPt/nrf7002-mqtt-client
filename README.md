@@ -109,7 +109,7 @@ nrf7002-mqtt-client-example/
 
 | Component | Description |
 |---|---|
-| **nRF54LM20-DK** | Nordic Semiconductor development kit with external WiFi-board: nRF7002EB2 and nRF5340 host processor |
+| **nRF54LM20-DK** | Nordic Semiconductor development kit with external WiFi-board: nRF7002EB2 |
 | **Wi-Fi access point** | Router or access point with Internet/network access |
 | **USB cable** | For programming, power and serial log output |
 | **Development PC** | Linux, macOS or Windows environment with nRF Connect SDK tools |
