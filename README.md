@@ -23,7 +23,7 @@ For info about the origin of this modified project:
 
 This repository contains an embedded **MQTT client example, in 2026 adapted for the Nordic nRF54LM20-DK with nRF54LM20B and a nRF7002EB2**.
 
-The application configures the board as a **Wi-Fi station**, connects to a Wi-Fi access point, establishes an MQTT session with a broker, subscribes to a configurable topic and periodically publishes a configurable message.
+The application configures the board as a **Wi-Fi station**, connects to a Wi-Fi access point, establishes an MQTT session with a broker, subscribes to a configurable topic, filters certain message contents and presents the data to a display.
 
 It is a practical starting point for IoT products that need Wi-Fi cloud connectivity, such as:
 
