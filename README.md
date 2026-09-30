@@ -370,13 +370,14 @@ Typical options include:
 
 A simple test setup is:
 
-| Device / Tool | Action |
-|---------------|--------|
-| **nRF54LM20-DK**  | Publishes periodically to `publish/topic` | (by default disabled in this version)
-| **nRF54LM20-DK**  | Subscribes to `subscribe/topic` |
-| **MQTT Explorer** | Subscribes to `publish/topic` to receive board messages |
-| **MQTT Explorer** | Publishes to `subscribe/topic` to send test data to the board |
-
++-------------------+---------------------------------------------------------------------------------+
+| Device / Tool     | Action                                                                          |
++-------------------+---------------------------------------------------------------------------------|
+| **nRF54LM20-DK**  | Publishes periodically to `publish/topic` (by default disabled in this version) |
+| **nRF54LM20-DK**  | Subscribes to `subscribe/topic`                                                 |
+| **MQTT Explorer** | Subscribes to `publish/topic` to receive board messages                         |
+| **MQTT Explorer** | Publishes to `subscribe/topic` to send test data to the board                   |
++-------------------|---------------------------------------------------------------------------------+
 This creates a simple two-way MQTT test loop between the development board and a  MQTT client.
 
 ---
