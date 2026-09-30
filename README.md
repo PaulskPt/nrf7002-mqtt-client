@@ -213,7 +213,7 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 |   /* Check if publishing is disabled via Kconfig */
 |   if (!IS_ENABLED(CONFIG_MQTT_SAMPLE_TRANSPORT_DO_PUBLISH)) {
 |       if (!PUBLISH_LOG_MSG_SENT) {
-|		      /* Only log once */
+|		  /* Only log once */
 |         PUBLISH_LOG_MSG_SENT = true;
 |         LOG_WRN("Publishing is disabled by configuration.");
 |       }
