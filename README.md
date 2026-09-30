@@ -287,7 +287,7 @@ Edit `prj.conf` and configure:
 
 ### 3. Build the firmware
 
-From a terminal with the nRF Connect SDK environment initialized:
+From a Terminal Window with the nRF Connect SDK environment initialized:
 
 Activate a virtual environment:
 
