@@ -1,0 +1,30 @@
+#! @file Kconfig
+ #* @brief Kconfig configuration file
+ #
+ # @author A BLUE THING IN THE CLOUD S.L.U.
+ #    ===  When the technology becomes art ===
+ #
+ # http://abluethinginthecloud.com
+ # j.longares@abluethinginthecloud
+ #
+ # (c) A BLUE THING IN THE CLOUD S.L.U.
+ #
+ #
+
+menu "Telemetry"
+	depends on DISPLAY
+
+config MQTT_SAMPLE_TELEMETRY_EPOCH
+	string "MQTT Telemetry Epoch"
+	default ""
+
+config MQTT_SAMPLE_TELEMETRY_TEMPERATURE
+	string "MQTT Telemetry temperature"
+	default ""
+
+module = MQTT_SAMPLE_TELEMETRY
+module-str = Telemetry
+source "subsys/logging/Kconfig.template.log_config"
+
+
+endmenu # Telemetry

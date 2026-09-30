@@ -1,0 +1,32 @@
+#
+# Copyright (c) 2023 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menu "Display"
+	depends on DISPLAY
+
+# Next definition added by Paulus Schulinck (Github @PaulskPt)
+# Added to resolve "undeclared" error
+config MQTT_SAMPLE_DISPLAY_LOG_LEVEL
+	int "Log level"
+	default 2
+
+config MQTT_SAMPLE_DISPLAY_THREAD_STACK_SIZE
+	int "Thread stack size"
+	default 4096
+
+config CHARACTER_FRAMEBUFFER
+	bool "char framebuffer flag"
+	default y
+
+config SSD1306
+	bool "Use SSD1306 flag"
+	default y
+
+module = MQTT_SAMPLE_DISPLAY
+module-str = Display
+source "subsys/logging/Kconfig.template.log_config"
+
+endmenu # MQTT_SAMPLE_DISPLAY

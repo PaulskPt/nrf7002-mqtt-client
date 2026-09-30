@@ -1,0 +1,26 @@
+common:
+  harness: net
+  tags:
+    - net
+    - wifi
+    - ci_build
+sample:
+  description: Test mqtt messaging, wifi driver and APIs functionality
+  name: mqtt
+tests:
+  sample.net.mqtt:
+    build_only: true
+    build_on_all: true
+    integration_platforms:
+      - nrf54lm20dk/nrf5420lmb/cpuapp
+    platform_allow: 
+      - nrf54lm20dk/nrf54lm20b/cpuapp
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
+    extra_configs:
+      - CONFIG_WIFI_CREDENTIALS_STATIC_SSID="Vodafone-8D96F1"
+      - CONFIG_WIFI_CREDENTIALS_STATIC_PASSWORD="z2pTqpFMMX6jXdv3"
+      - CONFIG_WIFI_CREDENTIALS_STATIC_TYPE_PSK=y
+    extra_args:
+      - CONFIG_BUILD_ONLY_NO_BLOBS=y
+      - SHIELD=nrf7002eb2
+  

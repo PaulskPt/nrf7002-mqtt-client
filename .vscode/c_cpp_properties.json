@@ -1,0 +1,41 @@
+{
+    "configurations": [
+        {
+            "name": "NCS",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/src/modules/display",
+                "${workspaceFolder}/src/modules/error",
+                "${workspaceFolder}/src/modules/led",
+                "${workspaceFolder}/src/modules/network",
+                "${workspaceFolder}/src/modules/sampler",
+                "${workspaceFolder}/src/modules/transport",
+                "C:/ncs/toolchains/**",
+                "C:/ncs/v3.4.0/modules/**",
+                "C:/ncs/v3.4.0/nrf/include/**",
+                "C:/ncs/v3.4.0/zephyr/**",
+                "C:/ncs/v3.4.0/zephyr/tests/cmake/syscalls",
+                "C:/ncs/v3.4.0/zephyr/drivers/**",
+                "C:/ncs/v3.4.0/zephyr/include/**",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/drivers",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/kernel",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/logging",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/net",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/posix",
+                "C:/ncs/v3.4.0/zephyr/include/zephyr/zbus", 
+                "C:/ncs/v3.4.0/nrf/subsys/**",
+                "C:/ncs/v3.4.0/zephyr/subsys/net/ip",
+                "C:/ncs/v3.4.0/zephyr/subsys/**",
+                "C:/ncs/v3.4.0/zephyr/arch/**",
+                "C:/ncs/v3.4.0/zephyr/arch/arm64/include/**"
+            ],
+            "defines": ["CONFIGS_PAULSKPT", "CONFIG_DISPLAY"],
+            "compilerPath": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-gcc-arm"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,13 @@
+/*
+ * Your original UART routing definitions
+ */
+/ {
+    chosen {
+        /* Keep console assigned or point it to an unused UART / dummy device */
+        zephyr,console = &uart1;
+
+        /* Explicitly route all LOG_* macros to your target VCOM port */
+        zephyr,log-uart = &uart0;
+    };
+};
+
