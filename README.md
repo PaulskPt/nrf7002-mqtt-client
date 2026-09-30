@@ -318,6 +318,7 @@ To deactivate virtual environment
 
 ```Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ deactivate +<Enter>
+```
 
 ### 5. Open the serial console
 
@@ -325,7 +326,7 @@ Use your preferred serial terminal to monitor the board logs.
 
 Typical options include:
 
-- VSCode > nRF Connect > Connected Devices > nRF54LM20 DK (s/n) > VCOM0 COM__ or VCOM1 COM__> ![alt text](image.png) > Serial Port Connection: Device - Option: nRF54LM20 DK VCOM0 COM__
+- VSCode > nRF Connect > Connected Devices > nRF54LM20 DK (serialnumber) > VCOM0 COM__ or VCOM1 COM__ > Serial Port Connection: Device - Option: nRF54LM20 DK VCOM0 COM__
 - PuTTY
 - Tera Term
 - minicom
