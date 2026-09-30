@@ -1,5 +1,5 @@
-# former nRF7002 MQTT Client Example
-# rewritten for a nRF54LM20-DK (by Paulus Schulinck (Github @PaulskPt))
+## Former nRF7002 MQTT Client Example
+## rewritten for a nRF54LM20-DK (by Paulus Schulinck (Github @PaulskPt))
 
 <div align="center">
 
