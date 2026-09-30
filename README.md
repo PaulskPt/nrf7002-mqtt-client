@@ -285,19 +285,42 @@ Edit `prj.conf` and configure:
 - MQTT payload
 - Publishing interval
 
-### 3. Build the firmware
+### 3. Install prerequisites
 
 From a Terminal Window with the nRF Connect SDK environment initialized:
 
-Activate a virtual environment:
+Setup a virtual environment:
 
 ```Terminal
+In VSCode Terminal:
+- Install venv: python -m venv .venv
+```
+Activate the virtual environment
+```
 <User>@<PCname> C:/<project_folder>: $ (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\nrf_projects\nrf7002-mqtt-client\.venv\Scripts\Activate.ps1)
 ```
 After this activation you will see the prompt:
 ```
 (.venv)  <User>@<PCname> C:/<project_folder>: $
 ```
+
+```Install prerequisites
+   - python -m pip install --upgrade pip
+   - Install west: `python -m pip install west`
+   - Make sure your .gitignore contains: .venv/
+   - Let Zephyr install its required Python packages: `west packages pip --install`
+```
+
+```Note that the following packages are not installed by Pip:
+    - CMake;
+    - Ninja;
+    - Git;
+    - Zephyr SDK / toolchain;
+    - nRF Connect SDK;
+    - Nordic command-line/debugging tools
+```
+
+### 4. Build the firmware
 
 ```Build command
 
@@ -336,23 +359,7 @@ Typical options include:
 - minicom
 - screen
 
-```Build prerequisites
-   In VSCode Terminal:
-   - Install venv: python -m venv .venv
-   - Activate the venv: .\.venv\Scripts\Activate.ps1
-   - python -m pip install --upgrade pip
-   - Install west: `python -m pip install west`
-   - Make sure your .gitignore contains: .venv/
-   - Let Zephyr install its required Python packages: `west packages pip --install`
-```
 
-``` Note that the following packages are not installed by Pip:
-    - CMake;
-    - Ninja;
-    - Git;
-    - Zephyr SDK / toolchain;
-    - nRF Connect SDK;
-    - Nordic command-line/debugging tools
 
 
 ### 6. Test with MQTT Explorer
