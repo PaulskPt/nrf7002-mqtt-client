@@ -134,7 +134,7 @@ Recommended tools:
 
 For the full setup process, see:
 
-[Getting started with nRF54LM20-DK](https://abluethinginthecloud.com/getting-started-with-nrf7002/)
+[Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
 
 ---
 
