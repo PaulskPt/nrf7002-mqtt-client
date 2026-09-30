@@ -202,6 +202,30 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 | `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS`   | Publishing period in seconds                                             |
 +------------------------------------------------|--------------------------------------------------------------------------+
 
+```Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
+In this file the following config topics are handled:
+- Logging
+- Wi-Fi
+- Flash
+- NET sockets
+- DNS
+- WPA Supplicant
+- Networking
+- Net sockets
+- Net buffers
+- Kernel options
+- Shell
+- Zephyr NET Connection Manager Connectivity layer
+- Stack sizes
+- Heap sizes
+- Posix API memory optimizations
+
+
+
+
+
+
+
 ```Kconfig.transport
 | config MQTT_SAMPLE_TRANSPORT_DO_PUBLISH
 |    bool "Enable MQTT message publishing"
