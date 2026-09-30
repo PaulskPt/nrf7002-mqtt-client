@@ -189,17 +189,18 @@ CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID="clientID"  # in my case: "NordicMQTTClie
 CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"
 CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 ```
-
-| Option | Description |
-|---|---|
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC` | MQTT topic where the board publishes messages |
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC` | MQTT topic where the board listens for messages |
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME` | MQTT broker hostname or IP address |
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME` | MQTT broker username; use `noUser` if authentication is not required |
++------------------------------------------------|--------------------------------------------------------------------------+
+| Option                                         | Description                                                              |
++------------------------------------------------|--------------------------------------------------------------------------+
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC`   | MQTT topic where the board publishes messages                            |
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC` | MQTT topic where the board listens for messages                          |
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME` | MQTT broker hostname or IP address                                       |
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME` | MQTT broker username; use `noUser` if authentication is not required     |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD` | MQTT broker password; use `noPassword` if authentication is not required |
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID` | MQTT client ID used by the nRF54LM20-DK |
-| `CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE` | Message periodically published by the board |
-| `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS` | Publishing period in seconds |
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID`       | MQTT client ID used by the nRF54LM20-DK                                  |
+| `CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE`         | Message periodically published by the board                              |
+| `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS`   | Publishing period in seconds                                             |
++------------------------------------------------|--------------------------------------------------------------------------+
 
 ```Kconfig.transport
 | config MQTT_SAMPLE_TRANSPORT_DO_PUBLISH
@@ -257,6 +258,7 @@ CONFIG_HEAP_MEM_POOL_SIZE=16384
 CONFIG_PWM=y
 
 ## Getting started
+```
 
 ### 1. Clone the repository
 
