@@ -87,9 +87,9 @@ nrf7002-mqtt-client-example/
 ├── src/
 │   ├── common/         # Common application files
 │   └── modules/        # Application modules
+│       ├── display/    # Optional I2C OLED
 │       ├── error/      # Error handling module
 │       ├── led/        # Optional LED module
-│       ├── display/    # Optional I2C OLED
 │       ├── network/    # Wi-Fi / network handling
 │       ├── sampler/    # Payload/sample generation
 |       ├── telemetry/  # Communicates MQTT connection status
@@ -109,7 +109,7 @@ nrf7002-mqtt-client-example/
 
 | Component | Description |
 |---|---|
-| **nRF54LM20-DK** | Nordic Semiconductor development kit with external WiFi-board: nRF7002EB2 and nRF5340 host processor |
+| **nRF54LM20-DK** | Nordic Semiconductor development kit with external WiFi-board: nRF7002EB2 |
 | **Wi-Fi access point** | Router or access point with Internet/network access |
 | **USB cable** | For programming, power and serial log output |
 | **Development PC** | Linux, macOS or Windows environment with nRF Connect SDK tools |
@@ -134,7 +134,7 @@ Recommended tools:
 
 For the full setup process, see:
 
-[Getting started with nRF54LM20-DK](https://abluethinginthecloud.com/getting-started-with-nrf7002/)
+[Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
 
 ---
 
@@ -221,10 +221,11 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 
 ### Display configuration
 
-This version uses an Adafruit 1.12inch 128x128 pixel mono OLED
+This version uses an Adafruit 1.12inch 128x128 pixel mono OLED (Adafruit Product ID: 5297)
 For this to operate well a Display module has been added and a file: boards/oled.overlay.
 The file `src/modules/display/display.c` is programmed to display the timezone dst information.
-In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/modules/display/dst_table_west.h` has a block of dst period start and end epoch table.
+In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/modules/display/dst_table_west.h`
+has a table with dst start and end epoch datetime stamps.
 
 ```config
 # Core Hardware Peripherals
