@@ -404,7 +404,7 @@ Typical options include:
 ## Example MQTT test scenario
 
 A simple test setup is:
-
+```
 +-------------------+---------------------------------------------------------------------------------+
 | Device / Tool     | Action                                                                          |
 +-------------------+---------------------------------------------------------------------------------|
@@ -413,12 +413,13 @@ A simple test setup is:
 | **MQTT Explorer** | Subscribes to `publish/topic` to receive board messages                         |
 | **MQTT Explorer** | Publishes to `subscribe/topic` to send test data to the board                   |
 +-------------------|---------------------------------------------------------------------------------+
+```
 This creates a simple two-way MQTT test loop between the development board and a  MQTT client.
 
 ---
 
 ## Main files to study
-
+```
 +--------------------------+------------------------------------------------------------------+
 | File / folder            | Purpose                                                          |
 +--------------------------+------------------------------------------------------------------+
@@ -434,7 +435,7 @@ This creates a simple two-way MQTT test loop between the development board and a
 | `src/modules/transport/` | MQTT transport implementation (added file: transport.h)          |
 | `src/modules/trigger/`   | Periodic publishing trigger                                      |
 +--------------------------+------------------------------------------------------------------+
-
+```
 ---
 
 ## Customizing the project
@@ -454,7 +455,7 @@ Set the value to the desired publishing period in seconds.
 Edit:
 
 ```conf
-CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"
+CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"  # (by default not used in this version)
 ```
 
 For a real product, replace this static payload with sensor data, device status, JSON telemetry or another application-specific format.
@@ -476,7 +477,7 @@ devices/<device-id>/commands
 devices/<device-id>/status
 ```
 
-### Add sensor data
+### Add sensor data (by default not used in this version)
 
 A typical next step is to connect the sampler module to real sensor readings.
 
