@@ -182,7 +182,7 @@ Set your MQTT broker, topics, client ID and payload:
 ```conf
 CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC="publish/topic" # in my case: not used
 CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC="subscribe/topic" # in my case: "sensors/Feath/ambient"
-CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME="broker"  # in my case: "RpiCM5"
+CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME="broker"  # in my case: "RPiCM5"
 CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME="noUser"
 CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD="noPassword"
 CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID="clientID"  # in my case: "NordicMQTTClient"
