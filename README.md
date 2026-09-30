@@ -304,8 +304,7 @@ or when you want to redirect the build output to a file:
 ```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west build -b nrf54lm20dk/nrf54lm20b/cpuapp --pristine -- -DSB_CONFIG_WIFI_NRF70=y -DSHIELD=nrf7002eb2 -DDTC_OVERLAY_FILE="boards/oled.overlay;boards/pwm_leds.overlay" 2>&1 | Tee-Object -FilePath pristine_build_log_1.txt
 ```
-
-```When a build fails, delete the build directory
+When a build fails, delete the build directory
 ```Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ Remove-Item -Recurse -Force build  
 
