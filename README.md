@@ -224,7 +224,8 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 This version uses an Adafruit 1.12inch 128x128 pixel mono OLED (Adafruit Product ID: 5297)
 For this to operate well a Display module has been added and a file: boards/oled.overlay.
 The file `src/modules/display/display.c` is programmed to display the timezone dst information.
-In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/modules/display/dst_table_west.h` has a block of dst period start and end epoch table.
+In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/modules/display/dst_table_west.h`
+has a table with dst start and end epoch datetime stamps.
 
 ```config
 # Core Hardware Peripherals
