@@ -87,9 +87,9 @@ nrf7002-mqtt-client-example/
 ├── src/
 │   ├── common/         # Common application files
 │   └── modules/        # Application modules
+│       ├── display/    # Optional I2C OLED
 │       ├── error/      # Error handling module
 │       ├── led/        # Optional LED module
-│       ├── display/    # Optional I2C OLED
 │       ├── network/    # Wi-Fi / network handling
 │       ├── sampler/    # Payload/sample generation
 |       ├── telemetry/  # Communicates MQTT connection status
