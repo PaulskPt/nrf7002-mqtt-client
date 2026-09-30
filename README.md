@@ -15,7 +15,9 @@ For info about the origin of this modified project:
 [Read the full technical article](https://abluethinginthecloud.com/nrf7002-mqtt-client-example/) ·
 [Visit A Blue Thing In The Cloud](https://abluethinginthecloud.com/) ·
 [YouTube channel](https://www.youtube.com/@abluethinginthecloud)
-[Changes in 2026 by Paulus Schulinck (Github @PaulskPt)](https://www.github.com/PaulskPt/nrf7002-mqtt-client)
+
+For the changed version of this project by Paulus Schulinck (Github: @PaulskPt)
+[version for nrRF54lM20-DK)](https://www.github.com/PaulskPt/nrf7002-mqtt-client)
 
 </div>
 
