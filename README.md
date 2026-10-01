@@ -552,7 +552,14 @@ Check that:
 - The project is located inside a valid Zephyr / west workspace or your environment variables are correctly configured.
 - Your SDK version supports the nRF54LM20-DK and required networking options.
 - Clean the failed /build folder (from within a Terminal (with .venv) using: `Remove-Item -Recurse -Force build`
-  
+
+### The flash fails
+
+Check that:
+- Your nRF54LM20-DK board is switched on;
+- a USB cable between your host PC is connected to USB-C connector J4 of the nRF54LM20-DK board.
+- You issued the flash command from within a (VSCode) Terminal window;
+- You issued the flash command from within an active virtual environment (.venv).
 ---
 
 ## Related resources
