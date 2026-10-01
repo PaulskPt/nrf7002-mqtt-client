@@ -189,9 +189,9 @@ CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"
 CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 ```
 ```
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 | Option                                         | Description                                                              |
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC`   | MQTT topic where the board publishes messages                            |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC` | MQTT topic where the board listens for messages                          |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME` | MQTT broker hostname or IP address                                       |
@@ -200,7 +200,7 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID`       | MQTT client ID used by the nRF54LM20-DK                                  |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE`         | Message periodically published by the board                              |
 | `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS`   | Publishing period in seconds                                             |
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 ```
 
 ```Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
@@ -406,12 +406,12 @@ A simple test setup is:
 ```
 +-------------------+---------------------------------------------------------------------------------+
 | Device / Tool     | Action                                                                          |
-+-------------------+---------------------------------------------------------------------------------|
++-------------------+---------------------------------------------------------------------------------+
 | **nRF54LM20-DK**  | Publishes periodically to `publish/topic` (by default disabled in this version) |
 | **nRF54LM20-DK**  | Subscribes to `subscribe/topic`                                                 |
 | **MQTT Explorer** | Subscribes to `publish/topic` to receive board messages                         |
 | **MQTT Explorer** | Publishes to `subscribe/topic` to send test data to the board                   |
-+-------------------|---------------------------------------------------------------------------------+
++-------------------+---------------------------------------------------------------------------------+
 ```
 This creates a simple two-way MQTT test loop between the development board and a  MQTT client.
 
