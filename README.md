@@ -556,23 +556,6 @@ Check that:
 
 - [Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
 - [nRF7002EB2 shield](https://nrfconnectdocs.nordicsemi.com/ncs/latest/zephyr/boards/shields/nrf7002eb2/doc/index.html)
-- [nRF7002 BSD Socket Examples](https://abluethinginthecloud.com/nrf7002-dk-bsd-socket-examples/)
-
----
-
-## About A Blue Thing In The Cloud
-
-[A Blue Thing In The Cloud](https://abluethinginthecloud.com/) is an electronics engineering company focused on **embedded firmware development**, **PCB design**, **wireless connectivity** and **IoT product development**.
-
-We help companies design and develop connected electronic products, from early prototypes to production-ready embedded systems.
-
-
-Regarding the original project:
-
-If you are developing a Wi-Fi IoT device, an nRF7002 product, an MQTT-connected sensor, a BLE/Wi-Fi device or a custom embedded system, feel free to contact us:
-[Contact A Blue Thing In The Cloud](https://abluethinginthecloud.com/contact/)
-
-Do not contact `A Blue Thing In The Cloud` for questions regarding this version for the nRF54LM20-DK (nRF54LM20B) with nRF7002eb2 board combo.
 
 ---
 
