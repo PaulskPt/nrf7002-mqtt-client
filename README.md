@@ -117,7 +117,7 @@ nrf7002-mqtt-client-example/
 | **USB cable** | For programming, power and serial log output |
 | **Development PC** | Linux, macOS or Windows environment with nRF Connect SDK tools |
 
-The nRF54LM20-DK is designed for Wi-Fi 6 IoT development and combines the nRF7002 Wi-Fi companion IC with an nRF5340 host SoC.
+The nRF54LM20-DK is designed for Wi-Fi 6 IoT development and combines the nRF7002 Wi-Fi companion IC.
 
 ---
 
