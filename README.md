@@ -111,12 +111,13 @@ nrf7002-mqtt-client-example/
 
 | Component | Description |
 |---|---|
-| **nRF54LM20-DK** | Nordic Semiconductor development kit with external WiFi-board: nRF7002EB2 |
+| **nRF54LM20-DK** | Nordic Semiconductor development kit with |
+| **nRF7002EB2** | Wi-Fi board, that will be attached onto `Exp` port of a nRF54LM20-DK board |
 | **Wi-Fi access point** | Router or access point with Internet/network access |
 | **USB cable** | For programming, power and serial log output |
 | **Development PC** | Linux, macOS or Windows environment with nRF Connect SDK tools |
 
-The nRF54LM20-DK is designed for Wi-Fi 6 IoT development and combines the nRF7002 Wi-Fi companion IC with an nRF5340 host SoC.
+The nRF54LM20-DK is designed for Wi-Fi 6 IoT development and combines the nRF7002 Wi-Fi companion IC.
 
 ---
 
@@ -188,9 +189,9 @@ CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"
 CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 ```
 ```
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 | Option                                         | Description                                                              |
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC`   | MQTT topic where the board publishes messages                            |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC` | MQTT topic where the board listens for messages                          |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME` | MQTT broker hostname or IP address                                       |
@@ -199,7 +200,7 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_CLIENT_ID`       | MQTT client ID used by the nRF54LM20-DK                                  |
 | `CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE`         | Message periodically published by the board                              |
 | `CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS`   | Publishing period in seconds                                             |
-+------------------------------------------------|--------------------------------------------------------------------------+
++------------------------------------------------+--------------------------------------------------------------------------+
 ```
 
 ```Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
@@ -405,12 +406,12 @@ A simple test setup is:
 ```
 +-------------------+---------------------------------------------------------------------------------+
 | Device / Tool     | Action                                                                          |
-+-------------------+---------------------------------------------------------------------------------|
++-------------------+---------------------------------------------------------------------------------+
 | **nRF54LM20-DK**  | Publishes periodically to `publish/topic` (by default disabled in this version) |
 | **nRF54LM20-DK**  | Subscribes to `subscribe/topic`                                                 |
 | **MQTT Explorer** | Subscribes to `publish/topic` to receive board messages                         |
 | **MQTT Explorer** | Publishes to `subscribe/topic` to send test data to the board                   |
-+-------------------|---------------------------------------------------------------------------------+
++-------------------+---------------------------------------------------------------------------------+
 ```
 This creates a simple two-way MQTT test loop between the development board and a  MQTT client.
 
@@ -476,6 +477,10 @@ devices/<device-id>/status
 ```
 
 ### Add sensor data (by default not used in this version)
+
+Note that this version of this repo receives MQTT messages with a payload containing 
+data from a Pimoroni multisensor stick (PIM745) which has a BME280 sensor from which 
+temperature, barometric pressure and humidity data are collected.
 
 A typical next step is to connect the sampler module to real sensor readings.
 
@@ -547,7 +552,14 @@ Check that:
 - The project is located inside a valid Zephyr / west workspace or your environment variables are correctly configured.
 - Your SDK version supports the nRF54LM20-DK and required networking options.
 - Clean the failed /build folder (from within a Terminal (with .venv) using: `Remove-Item -Recurse -Force build`
-  
+
+### The flash fails
+
+Check that:
+- Your nRF54LM20-DK board is switched on;
+- a USB cable between your host PC is connected to USB-C connector J4 of the nRF54LM20-DK board;
+- You issued the flash command from within a (VSCode) Terminal window;
+- You issued the flash command from within an active virtual environment (.venv).
 ---
 
 ## Related resources
