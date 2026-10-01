@@ -557,7 +557,7 @@ Check that:
 
 Check that:
 - Your nRF54LM20-DK board is switched on;
-- a USB cable between your host PC is connected to USB-C connector J4 of the nRF54LM20-DK board.
+- a USB cable between your host PC is connected to USB-C connector J4 of the nRF54LM20-DK board;
 - You issued the flash command from within a (VSCode) Terminal window;
 - You issued the flash command from within an active virtual environment (.venv).
 ---
