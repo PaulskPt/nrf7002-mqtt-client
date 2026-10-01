@@ -478,6 +478,10 @@ devices/<device-id>/status
 
 ### Add sensor data (by default not used in this version)
 
+Note that this version of this repo receives MQTT messages with a payload containing 
+data from a Pimoroni multisensor stick (PIM745) which has a BME280 sensor from which 
+temperature, barometric pressure and humidity data are collected.
+
 A typical next step is to connect the sampler module to real sensor readings.
 
 Example payload ideas:
