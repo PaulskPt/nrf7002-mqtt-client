@@ -12,9 +12,7 @@ Connect the **nRF54LM20-DK** to a Wi-Fi network, establish an **MQTT client sess
 <br>
 
 For info about the origin of this modified project:
-[Read the full technical article](https://abluethinginthecloud.com/nrf7002-mqtt-client-example/) ·
-[Visit A Blue Thing In The Cloud](https://abluethinginthecloud.com/) ·
-[YouTube channel](https://www.youtube.com/@abluethinginthecloud)
+[Read the full technical article](https://abluethinginthecloud.com/nrf7002-mqtt-client-example/) .
 
 For the changed version of this project by Paulus Schulinck (Github: @PaulskPt)
 [version for nrRF54lM20-DK)](https://www.github.com/PaulskPt/nrf7002-mqtt-client) .
