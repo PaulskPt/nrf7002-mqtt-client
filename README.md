@@ -572,6 +572,7 @@ Check that:
 - [nRF7002EB2 shield](https://nrfconnectdocs.nordicsemi.com/ncs/latest/zephyr/boards/shields/nrf7002eb2/doc/index.html)
 - [Getting started with MS Visual Studio Code](https://code.visualstudio.com/docs/introvideos/basics)
 - [Zephyr](https://zephyrproject.org/)
+- [Getting started with microcontrollers](https://www.instructables.com/A-Beginners-Guide-to-Microcontrollers/)
 ---
 
 ## Similar projects
