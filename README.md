@@ -14,9 +14,6 @@ Connect the **nRF54LM20-DK** to a Wi-Fi network, establish an **MQTT client sess
 For info about the origin of this modified project:
 [Read the full technical article](https://abluethinginthecloud.com/nrf7002-mqtt-client-example/) .
 
-For the changed version of this project by Paulus Schulinck (Github: @PaulskPt)
-[version for nrRF54lM20-DK)](https://www.github.com/PaulskPt/nrf7002-mqtt-client) .
-
 </div>
 
 ---
@@ -342,6 +339,11 @@ After this activation you will see the prompt:
     - nRF Connect SDK;
     - Nordic command-line/debugging tools
 ```
+
+Note: if, in VSCode, pops up (down-right in the VSCode Window) the message: 
+"Zephyr Workbench recommends applying CMake settings to prevent popup conflicts (e.g., sourceDirectory). Apply now?"
+Click on `No`
+
 
 ### 4. Build the firmware
 
