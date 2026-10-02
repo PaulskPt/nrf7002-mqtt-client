@@ -573,6 +573,10 @@ Check that:
 
 ---
 
+## Similar projects:
+- [ble time sync](https://github.com/PaulskPt/ble_time_sync/tree/main);
+- [Presto MQTT Multi Topic Subscriber](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber).
+
 ## Keywords
 
 `nrf7002` · `nrf7002eb2` · `nrf54lm20dk` · `nrf5340` · `nrf-connect-sdk` · `zephyr` · `zephyr-rtos` · `mqtt` · `mqtt-client` · `wifi` · `wi-fi-6` · `nordic-semiconductor` · `embedded-c` · `iot` · `wireless` · `wifi-station` · `mqtt-publish` · `mqtt-subscribe` · `embedded-firmware`
