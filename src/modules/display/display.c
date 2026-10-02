@@ -27,7 +27,7 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 // ---- Additions @PaulskPt:
 
 #include <zephyr/drivers/display.h>
-#include "secret.h"
+#include "dst_table_west.h"
 
 #include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/sys/uuid.h>
@@ -101,6 +101,7 @@ char display_buffer[128] = {0};
 
 char epoch_str[32]      = {0};
 char last_epoch_str[32] = {0};
+char dow_str[10]        = {0};
 char date_str[32]       = {0};
 char date_str_old[32]   = {0};
 char time_str[32]       = {0};
@@ -445,20 +446,33 @@ void screen_update_DateTime(bool use_running_time) {
 
  	if (gmtime_r(&local_running_time, &time_info) == NULL) {
 		LOG_WRN("%sFailed to convert local_running_time (epoch).", txt0);
+
+		snprintf(dow_str, sizeof(dow_str), "ERR");
 		
 		snprintf(date_str, sizeof(date_str), "GMTIME ERR");
 
 		snprintf(time_str, sizeof(time_str), "UNKNOWN");
 
     } else {
+
+		snprintf(dow_str, sizeof(dow_str), "%s", 
+			(time_info.tm_wday == 0) ? "Su" :
+			(time_info.tm_wday == 1) ? "Mo" :
+			(time_info.tm_wday == 2) ? "Tu" :
+			(time_info.tm_wday == 3) ? "We" :
+			(time_info.tm_wday == 4) ? "Th" :
+			(time_info.tm_wday == 5) ? "Fr" :
+			(time_info.tm_wday == 6) ? "Sa" : "ERR");
+
 		// For date_str ("YYYY-MM-DD")
 		strftime(date_str, sizeof(date_str), "%Y-%m-%d", &time_info);
 
 		// For time_str ("HH:MM:SS")
 		strftime(time_str, sizeof(time_str), "%H:%M:%S", &time_info);
 
-		LOG_INF("%sDate=%s Time=%s%s",
+		LOG_INF("%s%s Date=%s Time=%s%s",
 			txt0,
+			dow_str,
 			date_str,
 			time_str,
 			zone_label);
@@ -546,8 +560,16 @@ void screen_update(void) {
 		snprintf(time_header_str, sizeof(time_header_str), "Time%s", zone_label);
 		cfb_print(display_dev, time_header_str, 0, 64);
 
+        char oled_time_str[20];
+
+        snprintf(oled_time_str, sizeof(oled_time_str),
+        "%s %s",
+        time_str,
+        dow_str);
+
 		/*  CLOCK COUNTER ROW: Pushed down from Row 64 to Row 80 */
-		cfb_print(display_dev, time_str, 0, 80);
+		// cfb_print(display_dev, time_str, 0, 80);
+		cfb_print(display_dev, oled_time_str, 0, 80);
 
 		if (g_telemetry.temperature >= 0.0f) {
 			snprintf(temperature_str, \
