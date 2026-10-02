@@ -1,4 +1,4 @@
-## Former nRF7002 MQTT Client Example
+## Former nRF7002 MQTT Client Example,
 ## rewritten for a Nordic nRF54LM20-DK
 
 <div align="center">
