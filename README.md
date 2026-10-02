@@ -573,7 +573,7 @@ Check that:
 
 ---
 
-## Similar projects:
+## Similar projects
 - [ble time sync](https://github.com/PaulskPt/ble_time_sync/tree/main);
 - [Presto MQTT Multi Topic Subscriber](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber).
 
