@@ -340,9 +340,11 @@ After this activation you will see the prompt:
     - Nordic command-line/debugging tools
 ```
 
-Note: if, in VSCode, pops up (down-right in the VSCode Window) the message: 
+NOTE: if, in VSCode, pops up (down-right in the VSCode Window) the message: 
+```
 "Zephyr Workbench recommends applying CMake settings to prevent popup conflicts (e.g., sourceDirectory). Apply now?"
-Click on `No`
+```
+Click on: `No`
 
 
 ### 4. Build the firmware
