@@ -570,6 +570,7 @@ Check that:
 
 - [Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
 - [nRF7002EB2 shield](https://nrfconnectdocs.nordicsemi.com/ncs/latest/zephyr/boards/shields/nrf7002eb2/doc/index.html)
+- [Getting started with MS Visual Studio Code](https://code.visualstudio.com/docs/introvideos/basics)
 - [Zephyr](https://zephyrproject.org/)
 ---
 
