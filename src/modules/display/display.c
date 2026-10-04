@@ -3,14 +3,18 @@
  *
  * @author Paulus Schulinck (Github @PaulskPt)
  *    ===  Programming keeps the mind going ===
-
+ *
+ *  Update 2026-10-04: added functionality to update the time in between MQTT epoch updates. 
+ *  This is done by calculating the elapsed time since the last epoch update and adding it 
+ *  to the baseline epoch value. The display will now show a continuously updating time, 
+ * even if new MQTT data is not received every second.
 */
 #include "../transport/transport.h"  // Added by Paulus Schulinck (Github @PaulskPt)
 #include <zephyr/logging/log.h>
 
 // LOG_MODULE_REGISTER(display, CONFIG_MQTT_SAMPLE_DISPLAY_LOG_LEVEL);
 LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replaced by this line. On advice MS Copilot
-
+#include <zephyr/arch/arch_interface.h>
 #include <zephyr/kernel.h>
 #include <zephyr/display/cfb.h>
 
@@ -57,22 +61,24 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 #define DISPLAY_PRIORITY 7  // wa: 3
 #endif 
 
+static bool my_debug = false;
+
+struct tm time_info_old = {0}; // Old time_info for comparison
+
 // from Google AI. See set_system_epoch()
+static bool epoch_changed = false;
+static int64_t last_epoch = 0; // last epoch received from MQTT telemetry
 static int64_t epoch_baseline_seconds = 0; // is a copy of g_telemetry.epoch
-static uint64_t rtc_baseline_cycles = 0;
+static int64_t uptime_baseline_ms = 0; // is a copy of k_cycle_get_64() when the epoch was received
+bool last_epoch_displayed = false;
 static bool is_time_synchronized = false;
 
 /* MASTER TIME SYNC STORAGE: Placed here so update_screen can see them! */
 
 /* Initially 5 minutes for testing. Later once a day or so */
 #define RTC_SYNC_INTERVAL_MS (5 * 60 * 1000)
-
-time_t utc_running_time = 0;
-static bool last_epoch_displayed = false;
-static int64_t synchronized_epoch = 0;
-static uint64_t sync_uptime_ms = 0;
-int64_t last_epoch = 0;
-
+bool use_running_time = true; /* display running time instead of refresh after received epoch (once a minute)*/
+time_t utc_running_time = 0;/* MASTER TIME SYNC STORAGE: Placed here so update_screen can see them! */
 /*
 #define BT_UUID_OLED_SERVICE_VAL \
 	BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x567812345678)
@@ -99,21 +105,21 @@ static bool mqtt_is_connected_old = false;
 /* CORRECT FIX: Allocate the actual memory buffer here so the linker can find it */
 char display_buffer[128] = {0}; 
 
-char epoch_str[32]      = {0};
-char last_epoch_str[32] = {0};
-char dow_str[10]        = {0};
-char date_str[32]       = {0};
-char date_str_old[32]   = {0};
-char time_str[32]       = {0};
-char time_str_old[32]   = {0};
-char time_header_str[32]     = {0};
+char epoch_str[32]       = {0};
+char last_epoch_str[11]  = {0}; // see write_rx_data()
+// char last_epoch_str[32] = {0};
+char dow_str[10]         = {0};
+char date_str[32]        = {0};
+char date_str_old[32]    = {0};
+char time_str[32]        = {0};
+char time_str_old[32]    = {0};
+char time_header_str[32] = {0};
 
 static bool date_changed = false;
 static bool time_changed = false;
 const char *zone_label = ""; /* Starts blank until time data packet lands */
 
 /* end of global variables */
-
 
 /**
 * @brief Function sets the contrast of the screen
@@ -322,7 +328,7 @@ void set_system_from_epoch(void)
 	static char txt0[] = "set_system_from_epoch(): ";
 	if (g_telemetry.epoch <= 0)
 		return;
-	
+
 	struct timespec ts;
 	ts.tv_sec = (time_t)g_telemetry.epoch;
 	ts.tv_nsec = 0;
@@ -336,14 +342,11 @@ void set_system_from_epoch(void)
 	}
 
 	if (is_time_synchronized) {
-	    // Capture the exact hardware cycle count when the packet arrived
-	    // On nRF54 platforms, k_cycle_get_64() directly samples the 64-bit GRTC channel.
-	    rtc_baseline_cycles = k_cycle_get_64();
-	    epoch_baseline_seconds = g_telemetry.epoch;
+		epoch_baseline_seconds = g_telemetry.epoch;
+		uptime_baseline_ms = k_uptime_get();
+		LOG_INF("%sTime synchronized! Baseline Epoch: %lld", txt0, epoch_baseline_seconds);
 	}
-    LOG_INF("%sTime synchronized! Baseline Epoch: %lld", txt0, epoch_baseline_seconds);
 }
-
 
 /**
 * @brief Function logs the received (MQTT) telemetry data
@@ -351,19 +354,14 @@ void set_system_from_epoch(void)
 */
 int64_t get_current_epoch(void)
 {
-    if (!is_time_synchronized) {
-        return 0; 
-    }
+if (!is_time_synchronized) {
+return 0;
+}
 
-    uint64_t current_cycles = k_cycle_get_64();
-    uint64_t elapsed_cycles = current_cycles - rtc_baseline_cycles;
-    
-    // --- THIS LINE REPLACES YOUR DIVISION MATH ---
-    // k_cyc_to_ms_floor64 converts your 64-bit hardware cycles directly to milliseconds,
-    // which eliminates any IDE squiggles while maintaining pristine precision.
-    uint64_t elapsed_seconds = k_cyc_to_ms_floor64(elapsed_cycles) / 1000;  // k_syc_to_ms_floor65 is in kernel.h
+int64_t current_uptime_ms = k_uptime_get();
+int64_t elapsed_ms = current_uptime_ms - uptime_baseline_ms;
 
-    return epoch_baseline_seconds + elapsed_seconds;
+return epoch_baseline_seconds + (elapsed_ms / 1000);
 }
 
 void epoch_to_string(void)
@@ -376,11 +374,13 @@ void epoch_to_string(void)
 	LOG_INF("%sepoch_str=%s", txt0, epoch_str);
 }
 
+static bool epoch_err_msg_shown = false;
+
 /**
  * @brief updates the global date_str and time_str variables 
  * from the received telemetry epoch value
  */
-void screen_update_DateTime(bool use_running_time) {
+void screen_update_DateTime(void) {
 	static char txt0[] = "screen_update_DateTime(): ";
 
 	/* RAW INCOMING EPOCH STRING DISPLAY: Shifted from Row 96 up to Row 32 */
@@ -400,34 +400,28 @@ void screen_update_DateTime(bool use_running_time) {
 	/* ==================================================================== */
 
 	int current_gmt_offset_seconds = 0;
-	uint32_t elapsed_ms = 0;
 	zone_label = " (WET)";
 	/*  DYNAMIC DATA TRACKING VARIABLES DECLARATION */
 	int64_t current_epoch = 0;
 
-	if (use_running_time)
-		current_epoch = get_current_epoch();
-	else
-		current_epoch = g_telemetry.epoch;
-	
-	if (current_epoch < 0) return;
-
-	LOG_INF("%scurrent_epoch: %lld", txt0,
-			(long long)current_epoch);
-
-	synchronized_epoch = (time_t)current_epoch;
-
-	/*
-	   There is no separate k_uptime_get64() function 
-	   because k_uptime_get() is already 64-bit native. 
-	*/
 	if (use_running_time) {
-		elapsed_ms = k_uptime_get() - sync_uptime_ms; // sync_uptime_ms set in Display_Task()
-		/* BASELINE UTC TIME: Raw synchronized counter plus ticking seconds */
-		/* utc_running_time is a global variable */
-		utc_running_time = synchronized_epoch + (elapsed_ms / 1000);
+		current_epoch = get_current_epoch();
 	} else {
-		utc_running_time = synchronized_epoch;
+		current_epoch = g_telemetry.epoch;
+	}
+	
+	if (current_epoch <= 0) {
+	return;
+	}
+	
+	utc_running_time = (time_t)current_epoch;
+	
+	if (my_debug) {
+		LOG_INF("%scurrent_epoch: %lld",
+			txt0, (long long)current_epoch);
+		
+		LOG_INF("%sUTC running time (epoch): %lld",
+			txt0, (long long)utc_running_time);
 	}
 
 	/* utc_running_time is a global variable */
@@ -444,6 +438,12 @@ void screen_update_DateTime(bool use_running_time) {
 	time_t local_running_time = utc_running_time + current_gmt_offset_seconds;
     struct tm time_info;
 
+	if (my_debug) {
+		LOG_INF("%sCurrent GMT offset seconds: %d", txt0, current_gmt_offset_seconds);
+		LOG_INF("%sUTC running time (epoch): %lld", txt0, (long long)utc_running_time);
+		LOG_INF("%sLocal running time (epoch): %lld", txt0, (long long)local_running_time);
+	}
+
  	if (gmtime_r(&local_running_time, &time_info) == NULL) {
 		LOG_WRN("%sFailed to convert local_running_time (epoch).", txt0);
 
@@ -454,6 +454,36 @@ void screen_update_DateTime(bool use_running_time) {
 		snprintf(time_str, sizeof(time_str), "UNKNOWN");
 
     } else {
+
+		date_changed =
+		(time_info_old.tm_year != time_info.tm_year) ||
+		(time_info_old.tm_mon != time_info.tm_mon) ||
+		(time_info_old.tm_mday != time_info.tm_mday);
+		
+		time_changed =
+		(time_info_old.tm_hour != time_info.tm_hour) ||
+		(time_info_old.tm_min != time_info.tm_min) ||
+		(time_info_old.tm_sec != time_info.tm_sec);
+		
+		/* Save for comparison on next invocation */
+		time_info_old = time_info;
+
+		int year = time_info.tm_year + 1900;
+		
+		if (year <= 1970 && !epoch_err_msg_shown) {
+			LOG_WRN("%sInvalid epoch time: %lld. Year=%d.",
+				txt0,
+				(long long)current_epoch,
+				year);
+		
+			epoch_err_msg_shown = true;
+			return;
+		}
+
+
+		if (my_debug) {
+			LOG_INF("%sDate changed: %s, Time changed: %s", txt0, date_changed ? "true" : "false", time_changed ? "true" : "false");
+		}
 
 		snprintf(dow_str, sizeof(dow_str), "%s", 
 			(time_info.tm_wday == 0) ? "Su" :
@@ -470,23 +500,33 @@ void screen_update_DateTime(bool use_running_time) {
 		// For time_str ("HH:MM:SS")
 		strftime(time_str, sizeof(time_str), "%H:%M:%S", &time_info);
 
-		LOG_INF("%s%s Date=%s Time=%s%s",
-			txt0,
-			dow_str,
-			date_str,
-			time_str,
-			zone_label);
-
+		if (my_debug) {
+			LOG_INF("%s%s Date=%s Time=%s%s",
+				txt0,
+				dow_str,
+				date_str,
+				time_str,
+				zone_label);
+		}
 		if (strcmp(date_str, date_str_old) != 0) {
 			// Safely overwrite the old buffer with the new contents
 			memcpy(date_str_old, date_str, sizeof(date_str_old));
-			date_changed = true;
+			//date_changed = true;
 		}
 		
 		if (strcmp(time_str, time_str_old) != 0) {
 			// Safely overwrite the old buffer with the new contents
 			memcpy(time_str_old, time_str, sizeof(time_str_old));
-			time_changed = true;
+			//time_changed = true;
+		}
+
+		if (my_debug) {
+			if (date_changed) {
+				LOG_INF("%sDate changed to: %s", txt0, date_str);
+			}
+			if (time_changed) {
+				LOG_INF("%sTime changed to: %s", txt0, time_str);
+			}
 		}
 	}
 }
@@ -501,7 +541,6 @@ void screen_update(void) {
 	static char txt0[] = "screen_update(): ";
 	char temperature_str[16];
 	uint16_t len_temperature_str;
-	bool epoch_changed = false;
 
 	/* Handle frame buffer clear while honoring your verified gating filter */
 	// LOG_INF("%slStart=%s", txt0, lStart ? "true" : "false");
@@ -537,85 +576,87 @@ void screen_update(void) {
 		screen_header(); /* Update the screen header */
 	}
 
-	epoch_changed = g_telemetry.epoch != last_epoch ? true : false;
 
-	if (epoch_changed) {
+	if (epoch_changed || use_running_time) {
 		/* Only print to LOG if we have values greater than zero */
-		if (g_telemetry.epoch > 0 || last_epoch > 0) {
+		if (my_debug && (g_telemetry.epoch > 0 || last_epoch > 0)) {
 			LOG_INF("%sg_telemetry.epoch= %lld, last_epoch= %lld", txt0, g_telemetry.epoch, last_epoch);
 		}
 
-		cfb_framebuffer_clear(display_dev, true); // clear the screen
-		screen_header();
-		screen_line();
+		if (epoch_changed) {
+			cfb_framebuffer_clear(display_dev, true); // clear the screen
+			screen_header();
+			screen_line();
+	    }
 
 		/* Print to your SH1107 OLED glass memory segments */
 		cfb_print(display_dev, epoch_str, 0, 32);
-		last_epoch_displayed = true;
 
-		/*  CALENDAR DATE ROW: Pushed down from Row 32 to Row 48 */
-		cfb_print(display_dev, date_str, 0, 48);
+		if (epoch_changed || date_changed) {
+			/*  CALENDAR DATE ROW: Pushed down from Row 32 to Row 48 */
+			cfb_print(display_dev, date_str, 0, 48);
+			// date_changed = false;
 
-		/*  TIME ZONE HEADER ROW: Pushed down from Row 48 to Row 64 */
-		snprintf(time_header_str, sizeof(time_header_str), "Time%s", zone_label);
-		cfb_print(display_dev, time_header_str, 0, 64);
+			/*  TIME ZONE HEADER ROW: Pushed down from Row 48 to Row 64 */
+			snprintf(time_header_str, sizeof(time_header_str), "Time%s", zone_label);
+			cfb_print(display_dev, time_header_str, 0, 64);
+		}
 
-        char oled_time_str[20];
+		if (epoch_changed || date_changed || time_changed) {
+			char oled_time_str[48];
 
-        snprintf(oled_time_str, sizeof(oled_time_str),
-        "%s %s",
-        time_str,
-        dow_str);
+			snprintf(oled_time_str, sizeof(oled_time_str),
+			"%s %s",
+			time_str,
+			dow_str);
 
-		/*  CLOCK COUNTER ROW: Pushed down from Row 64 to Row 80 */
-		// cfb_print(display_dev, time_str, 0, 80);
-		cfb_print(display_dev, oled_time_str, 0, 80);
+			/*  CLOCK COUNTER ROW: Pushed down from Row 64 to Row 80 */
+			// cfb_print(display_dev, time_str, 0, 80);
+			cfb_print(display_dev, oled_time_str, 0, 80);
+		}
 
-		if (g_telemetry.temperature >= 0.0f) {
-			snprintf(temperature_str, \
-			sizeof(temperature_str), \
-			"%d.%d", \
-			(int)g_telemetry.temperature, \
-			((int)(g_telemetry.temperature * 10)) % 10);
-		
-			len_temperature_str = strlen(temperature_str);
-
-			if (len_temperature_str > 0) {
-
-				if (g_telemetry.temp_logIt) {
-					LOG_INF("%sMQTT received temperature = \"%s\" (Length: %d)", txt0, temperature_str, len_temperature_str);
-					g_telemetry.temp_logIt = false; /* Toggle state flag guard */
-				}
+		if (epoch_changed) {
+			if (g_telemetry.temperature >= 0.0f) {
+				snprintf(temperature_str, \
+				sizeof(temperature_str), \
+				"%d.%d", \
+				(int)g_telemetry.temperature, \
+				((int)(g_telemetry.temperature * 10)) % 10);
 			
-				/*  FORMAT AND COPY SENSOR METRIC INTO DISPLAY BUFFER */
-				snprintf(display_buffer, sizeof(display_buffer), "Temp: %s C", temperature_str);
-				LOG_INF("%ssensor temperature displayed: \"%s\"", txt0, display_buffer);
+				len_temperature_str = strlen(temperature_str);
 
-				/*  PERSISTENT SENSOR METRIC DISPLAY: Pushed down from Row 80 to Row 96 */
-				if (strlen(display_buffer) > 0) {
-					print_word_wrapped(display_buffer, 96);
+				if (len_temperature_str > 0) {
+
+					if (g_telemetry.temp_logIt) {
+						LOG_INF("%sMQTT received temperature = \"%s\" (Length: %d)", txt0, temperature_str, len_temperature_str);
+						g_telemetry.temp_logIt = false; /* Toggle state flag guard */
+					}
+				
+					/*  FORMAT AND COPY SENSOR METRIC INTO DISPLAY BUFFER */
+					snprintf(display_buffer, sizeof(display_buffer), "Temp: %s C", temperature_str);
+					LOG_INF("%ssensor temperature displayed: \"%s\"", txt0, display_buffer);
+
+					/*  PERSISTENT SENSOR METRIC DISPLAY: Pushed down from Row 80 to Row 96 */
+					if (strlen(display_buffer) > 0) {
+						print_word_wrapped(display_buffer, 96);
+					}
 				}
+			} else {
+				print_word_wrapped("Waiting for data", 96);
 			}
-		} else {
-			print_word_wrapped("Waiting for data", 96);
 		}
 		/* Re-render changes directly onto your Adafruit glass surface */
 		/* Pus the changes to the screen */
 		cfb_framebuffer_finalize(display_dev);
 	}
-	epoch_changed = false;
 }
 
 // 1. This is your loop task (Notice it uses the 3 required NULL pointer arguments)
 void Display_Task(void *p1, void *p2, void *p3) {
 	// int err;
     static char txt0[] = "Display_Task():  ";
-	bool epoch_changed = false;
-	bool use_running_time = false;
 	bool mqtt_is_connected_local = false;
 	bool mqtt_is_connected_shown = false;
-
-	sync_uptime_ms = k_uptime_get(); // get the current uptime in mSec
 
 	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
 
@@ -647,7 +688,7 @@ void Display_Task(void *p1, void *p2, void *p3) {
 	/* ==================================================================== */
 	while (1) {
 		/* 1. Sleep for exactly 1000ms (1 second) before running checks */
-		k_sleep(K_MSEC(1000));
+		k_sleep(K_MSEC(500));
 
 		if (!mqtt_is_connected_shown) {
 			mqtt_is_connected_local = transport_is_connected();
@@ -663,26 +704,31 @@ void Display_Task(void *p1, void *p2, void *p3) {
 		epoch_changed = g_telemetry.epoch != last_epoch ? true : false;
 
 		if (epoch_changed) {
+			/* We have new MQTT data */
 			LOG_INF("%sepoch has changed? %s", txt0, epoch_changed ? "Yes" : "No");
 			LOG_INF("%sg_telemetry.epoch= %lld, last_epoch= %lld", txt0, g_telemetry.epoch, last_epoch);
-	 		if (g_telemetry.epoch > 0 && g_telemetry.epoch != last_epoch) {
+			/* copy to global variables */
+			last_epoch = g_telemetry.epoch;
+
+	 		if (g_telemetry.epoch > 0) {
 				set_system_from_epoch();
 				/* set epoch_str, date_str and time_str */
 				epoch_to_string();
+				strcpy(last_epoch_str, epoch_str);
 				if (!use_running_time) {
 					// Update datetime only wen new epoch received (once a minute)
 					if (g_telemetry.valid) {
 						telemetry_inf(); 
-						screen_update_DateTime(use_running_time);
+						screen_update_DateTime();
 					}
 				}
 			}
-			epoch_changed = false;
 		} else {
 			/* Update datetime every second */
 			if (use_running_time) {
-				screen_update_DateTime(use_running_time);
+				screen_update_DateTime();
 			}
+			
 		}
 		/* read system clock and set date_str and time_str accordingly */
 		// update_datetime_from_system_clock();
@@ -695,10 +741,8 @@ void Display_Task(void *p1, void *p2, void *p3) {
 
 		/* 3. Force a complete screen drawing update to handle the active views */
 		screen_update();
-		/* We have new MQTT data */
-	 	/* copy to global variables */
-		last_epoch = g_telemetry.epoch;
-		strcpy(last_epoch_str, epoch_str);
+		date_changed = false; /* force a screen update */
+		time_changed = false; /* force a screen update */
 	}
 }
 
