@@ -566,6 +566,10 @@ Check that:
 - You issued the flash command from within an active virtual environment (.venv).
 ---
 
+### Updates
+
+- 2026-10-04: added functionality to update the time in between MQTT epoch updates.
+
 ## Related resources
 
 - [Getting started with nRF54LM20-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK/Get-Started)
