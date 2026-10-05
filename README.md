@@ -251,14 +251,14 @@ In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/mod
 has a table with dst start and end epoch datetime stamps.
 
 config
-# Core Hardware Peripherals
+### Core Hardware Peripherals
 CONFIG_GPIO=y
 CONFIG_I2C=y
 
-# Enable the Universal Display Subsystem Core
+### Enable the Universal Display Subsystem Core
 CONFIG_DISPLAY=y
 CONFIG_CHARACTER_FRAMEBUFFER=y
-# CONFIG_SSD1306=y
+```# CONFIG_SSD1306=y```
 CONFIG_HEAP_MEM_POOL_SIZE=16384
 
 |
@@ -272,7 +272,7 @@ LEDs
 |  To make the fading effect possible a /boards/pwm_leds.overlay has been added
 !  
 config
-# LED PWM 
+### LED PWM 
 CONFIG_PWM=y
 
 ## Getting started
@@ -281,15 +281,16 @@ CONFIG_PWM=y
 ### 1. Clone the repository
 
 bash
+```
 git clone https://github.com/paulskpt/nrf7002-mqtt-client.git
 cd nrf7002-mqtt-client
 ```
 
-```
 If you want to clone the original version of this project:
+```
 git clone https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example.git
 cd nrf7002-mqtt-client-example
-
+```
 
 ### 2. Configure Wi-Fi and MQTT settings
 
@@ -313,9 +314,10 @@ Setup a virtual environment:
 
 Terminal
 In VSCode Terminal:
-- Install venv: python -m venv .venv
-- 
-Activate the virtual environment
+- Install venv:
+  ```python -m venv .venv```
+
+- Activate the virtual environment:
 ```
 <User>@<PCname> C:/<project_folder>: $ (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\nrf_projects\nrf7002-mqtt-client\.venv\Scripts\Activate.ps1)
 ```
@@ -325,11 +327,15 @@ After this activation you will see the prompt:
 ```
 
 Install prerequisites
-   - python -m pip install --upgrade pip
-   - Install west: `python -m pip install west`
-   - Make sure your .gitignore contains: .venv/
-   - Let Zephyr install its required Python packages: `west packages pip --install`
+- Install pip:
+  ```python -m pip install --upgrade pip```
 
+- Install west:
+  ```python -m pip install west```
+  
+- Make sure your .gitignore contains: .venv/
+- Let Zephyr install its required Python packages:
+  ```west packages pip --install```
 
 Note that the following packages are not installed by Pip:
     - CMake;
@@ -352,16 +358,20 @@ Click on: `No`
 Build command
 
 Terminal
+```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west build -b nrf54lm20dk/nrf54lm20b/cpuapp --pristine -- -DSB_CONFIG_WIFI_NRF70=y -DSHIELD=nrf7002eb2 -DDTC_OVERLAY_FILE="boards/oled.overlay;boards/pwm_leds.overlay"
 ```
 or when you want to redirect the build output to a file:
 ```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west build -b nrf54lm20dk/nrf54lm20b/cpuapp --pristine -- -DSB_CONFIG_WIFI_NRF70=y -DSHIELD=nrf7002eb2 -DDTC_OVERLAY_FILE="boards/oled.overlay;boards/pwm_leds.overlay" 2>&1 | Tee-Object -FilePath pristine_build_log_1.txt
+```
 
 When a build fails, delete the build directory
 
 Terminal
+```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ Remove-Item -Recurse -Force build  
+```
 
 ### 4. Flash the board
 
@@ -420,7 +430,6 @@ A simple test setup is:
 ```
 This creates a simple two-way MQTT test loop between the development board and a  MQTT client.
 
----
 
 ## Main files to study
 ```
