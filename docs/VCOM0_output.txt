@@ -1,0 +1,116 @@
+Monday 2026-10-05 10h33 PT
+Board: nRF54LM20-DK (nRF54LM20B) with nRF7002EB2
+IDE VSCode
+Project nrf7002-mqtt-client
+
+VCOM0 (COM14) output (after RESET of the board):
+------------------------------------------------
+[00:00:00.021,430] <inf> wifi_nrf_bus: SPIM spi@c8000: freq = 8 MHz
+[00:00:00.030,170] <inf> wifi_nrf_bus: SPIM spi@c8000: latency = 0
+[00:00:00.292,354] <inf> fs_nvs: 8 Sectors of 4096 bytes
+[00:00:00.300,222] <inf> fs_nvs: alloc wra: 0, fd0
+[00:00:00.307,538] <inf> fs_nvs: data wra: 0, 0
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[00:00:00.328,413] <inf> wifi_supplicant: wpa_supplicant initialized
+[00:00:05.502,266] <inf> wpa_supp: wlan0: SME: Trying to authenticate with __:b2:__:fc:__:2c (SSID='Vodafone-______' freq=2447 MHz)
+[00:00:10.538,187] <inf> wpa_supp: wlan0: Added BSSID __:b2:__:fc:__:2c into ignore list, ignoring for 10 seconds
+[00:00:10.551,161] <inf> wpa_supp: wlan0: BSSID __:b2:__:fc:__:2c ignore list count incremented to 2, ignoring for 10 seconds
+[00:00:10.731,762] <inf> wpa_supp: wlan0: SME: Trying to authenticate with __:10:__:8d:__:f8 (SSID='Vodafone-______' freq=2457 MHz)
+[00:00:11.118,583] <inf> wpa_supp: wlan0: Trying to associate with __:10:__:8d:__:f8 (SSID='Vodafone-8D96F1' freq=2457 MHz)
+[00:00:11.167,620] <inf> network: Starting nrf54lm20dk with CPU frequency: 128 MHz
+[00:00:11.170,966] <inf> wpa_supp: wlan0: Associated with __:10:__:8d:__:f8
+[00:00:11.189,548] <inf> wpa_supp: wlan0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[00:00:11.226,759] <inf> wpa_supp: wlan0: WPA: Key negotiation completed __:10:__:8d:__:f8 [PTK=CCMP GTK=CCMP]
+[00:00:11.240,453] <inf> wpa_supp: wlan0: CTRL-EVENT-CONNECTED - Connection to __:10:__:8d:__:f8 completed [id=0 id_str=]
+[00:00:11.259,145] <inf> network: Wi-Fi Connected, waiting for IP address
+[00:00:11.268,411] <inf> network: Connected
+Connected
+[00:00:11.311,949] <inf> display: Display contrast successfully initialized to 50
+[00:00:11.321,913] <inf> display: screen_init(): Setting the initial screen
+[00:00:12.202,165] <inf> network: Static IP address (overridable): /255.255.255.0 -> 
+[00:00:12.212,465] <inf> network: Interface = 0x20001ad0
+[00:00:12.220,301] <inf> network: PSK length: 16
+[00:00:12.227,452] <inf> network: SSID: Vodafone-______
+[00:00:12.235,205] <inf> network: Security: 1
+[00:00:12.245,026] <inf> wpa_supp: wlan0: CTRL-EVENT-DISCONNECTED bssid=__:10:__:8d:__:f8 reason=3 locally_generated=1
+[00:00:12.259,899] <inf> network: Disconnected
+Disconnected
+[00:00:13.652,351] <inf> wpa_supp: wlan0: SME: Trying to authenticate with __:10:__:8d:__:f8 (SSID='Vodafone-______' freq=2457 MHz)
+[00:00:13.679,733] <inf> network: Connection requested
+[00:00:13.691,360] <inf> wpa_supp: wlan0: Trying to associate with __:10:__:8d:__:f8 (SSID='Vodafone-______' freq=2457 MHz)
+[00:00:13.739,442] <inf> wpa_supp: wlan0: Associated with __:10:__:8d:__:f8
+[00:00:13.749,931] <inf> wpa_supp: wlan0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[00:00:13.784,122] <inf> wpa_supp: wlan0: WPA: Key negotiation completed with __:10:__:8d:__:f8 [PTK=CCMP GTK=CCMP]
+[00:00:13.797,592] <inf> wpa_supp: wlan0: CTRL-EVENT-CONNECTED - Connection to __:10:__:8d:__:f8 completed [id=0 id_str=]
+[00:00:13.816,063] <inf> network: Wi-Fi Connected, waiting for IP address
+[00:00:13.825,324] <inf> network: Connected
+Connected
+[00:00:09.066,999] <inf> network: ============
+[00:00:11.155,712] <inf> network: IPv4 address acquired
+[00:00:11.163,443] <inf> network: DHCP IP address: 192.168.1.95
+[00:00:16.172,349] <inf> mqtt_helper_custom: Using static IP address: 192.168._.___
+[00:00:16.182,537] <inf> mqtt_helper_custom: IPv4 Address found 192.168._.___
+[00:00:16.192,152] <inf> mqtt_helper_custom: Broker initialized successfully
+[00:00:16.211,701] <inf> mqtt_helper_custom: MQTT connection request sent
+[00:00:16.229,273] <inf> transport: Connected to MQTT broker
+[00:00:16.238,330] <inf> transport: Hostname: RPiCM5.local
+[00:00:16.246,343] <inf> transport: Client ID: NordicMQTTClient
+[00:00:16.254,801] <inf> transport: Port: 1883
+[00:00:16.261,785] <inf> transport: TLS: No
+[00:00:16.268,510] <inf> transport: Username: noUser
+[00:00:16.276,024] <inf> transport: Password: noPassword
+[00:00:16.284,549] <inf> led_fade: LED 2 fading effect started
+[00:00:16.295,819] <inf> transport: Subscribed to topic sensors/Feath/ambient
+[00:00:16.467,472] <inf> display: screen_update(): MQTT connected? Yes
+[00:00:20.982,019] <wrn> transport: Publishing is disabled by configuration.
+[00:00:24.917,644] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791192824},"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1004.4,"u":"mB","mn":800,"mx":1200},"a":{"v":99.2,"u":"m","mn":0,"mx":3000},"h":{"v":62.5,"u":"%","mn":0,"mx":100}}} on topic: sensors/Feath/ambient
+[00:00:24.952,750] <inf> transport: Epoch=1791192824, Temp=28.1
+[00:00:25.417,165] <inf> display: Display_Task():  epoch has changed? Yes
+[00:00:25.426,438] <inf> display: Display_Task():  g_telemetry.epoch= 1791192824, last_epoch= 0
+[00:00:25.437,658] <inf> display: set_system_from_epoch(): System wall-clock synchronized from telemetry epoch: 1791192824
+[00:00:25.451,183] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791192824
+[00:00:25.463,169] <inf> display: epoch_to_string(): epoch_str=1791192824
+[00:00:25.532,277] <inf> display: screen_update(): MQTT received temperature = "28.1" (Length: 4)
+[00:00:25.543,629] <inf> display: screen_update(): sensor temperature displayed: "Temp: 28.1 C"
+[00:00:26.113,207] <inf> display: screen_update_DateTime(): MQTT received epoch = "1791192824"
+[00:00:26.124,290] <inf> display: screen_update_DateTime(): Using MQTT epoch: 1791192824
+[00:00:26.134,955] <inf> display: screen_update_DateTime(): Date changed to: 2026-10-05
+[00:00:26.145,431] <inf> display: screen_update_DateTime(): Time changed to: 10:33:44
+[00:01:24.923,315] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791192884},"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1004.4,"u":"mB","mn":800,"mx":1200},"a":{"v":99.3,"u":"m","mn":0,"mx":3000},"h":{"v":61.8,"u":"%","mn":0,"mx":100}}} on topic: sensors/Feath/ambient
+[00:01:24.958,379] <inf> transport: Epoch=1791192884, Temp=28.1
+[00:01:25.363,639] <inf> display: Display_Task():  epoch has changed? Yes
+[00:01:25.372,908] <inf> display: Display_Task():  g_telemetry.epoch= 1791192884, last_epoch= 1791192824
+[00:01:25.384,891] <inf> display: set_system_from_epoch(): System wall-clock synchronized from telemetry epoch: 1791192884
+[00:01:25.398,404] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791192884
+[00:01:25.410,380] <inf> display: epoch_to_string(): epoch_str=1791192884
+[00:01:25.479,457] <inf> display: screen_update(): MQTT received temperature = "28.1" (Length: 4)
+[00:01:25.490,792] <inf> display: screen_update(): sensor temperature displayed: "Temp: 28.1 C"
+[00:01:26.060,344] <inf> display: screen_update_DateTime(): MQTT received epoch = "1791192884"
+[00:01:26.071,417] <inf> display: screen_update_DateTime(): Using MQTT epoch: 1791192884
+[00:01:26.082,086] <inf> display: screen_update_DateTime(): Time changed to: 10:34:44
+[00:02:25.031,556] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791192944},"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1004.4,"u":"mB","mn":800,"mx":1200},"a":{"v":99.1,"u":"m","mn":0,"mx":3000},"h":{"v":61.7,"u":"%","mn":0,"mx":100}}} on topic: sensors/Feath/ambient
+[00:02:25.066,655] <inf> transport: Epoch=1791192944, Temp=28.1
+[00:02:25.300,790] <inf> display: Display_Task():  epoch has changed? Yes
+[00:02:25.310,065] <inf> display: Display_Task():  g_telemetry.epoch= 1791192944, last_epoch= 1791192884
+[00:02:25.322,054] <inf> display: set_system_from_epoch(): System wall-clock synchronized from telemetry epoch: 1791192944
+[00:02:25.335,575] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791192944
+[00:02:25.347,570] <inf> display: epoch_to_string(): epoch_str=1791192944
+[00:02:25.416,669] <inf> display: screen_update(): MQTT received temperature = "28.1" (Length: 4)
+[00:02:25.428,015] <inf> display: screen_update(): sensor temperature displayed: "Temp: 28.1 C"
+[00:02:25.997,592] <inf> display: screen_update_DateTime(): MQTT received epoch = "1791192944"
+[00:02:26.008,668] <inf> display: screen_update_DateTime(): Using MQTT epoch: 1791192944
+[00:02:26.019,332] <inf> display: screen_update_DateTime(): Time changed to: 10:35:44
+[00:03:25.037,115] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791193004},"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1004.4,"u":"mB","mn":800,"mx":1200},"a":{"v":99.1,"u":"m","mn":0,"mx":3000},"h":{"v":62.3,"u":"%","mn":0,"mx":100}}} on topic: sensors/Feath/ambient
+[00:03:25.072,277] <inf> transport: Epoch=1791193004, Temp=28.1
+[00:03:25.236,649] <inf> display: Display_Task():  epoch has changed? Yes
+[00:03:25.245,926] <inf> display: Display_Task():  g_telemetry.epoch= 1791193004, last_epoch= 1791192944
+[00:03:25.257,919] <inf> display: set_system_from_epoch(): System wall-clock synchronized from telemetry epoch: 1791193004
+[00:03:25.271,446] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791193004
+[00:03:25.283,435] <inf> display: epoch_to_string(): epoch_str=1791193004
+[00:03:25.352,544] <inf> display: screen_update(): MQTT received temperature = "28.1" (Length: 4)
+[00:03:25.363,905] <inf> display: screen_update(): sensor temperature displayed: "Temp: 28.1 C"
+[00:03:25.933,543] <inf> display: screen_update_DateTime(): MQTT received epoch = "1791193004"
+[00:03:25.944,625] <inf> display: screen_update_DateTime(): Using MQTT epoch: 1791193004
+[00:03:25.955,288] <inf> display: screen_update_DateTime(): Time changed to: 10:36:44
+[...]
