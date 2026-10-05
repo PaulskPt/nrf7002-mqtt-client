@@ -380,7 +380,7 @@ Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ Remove-Item -Recurse -Force build  
 ```
 
-### 4. Flash the board
+### 5. Flash the board
 
 Terminal
 ```
@@ -394,7 +394,7 @@ Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ deactivate +<Enter>
 ```
 
-### 5. Open the serial console
+### 6. Open the serial console
 
 Use your preferred serial terminal to monitor the board logs.
 
@@ -407,7 +407,7 @@ Typical options include:
 - screen
 
 
-### 6. Test with MQTT Explorer
+### 7. Test with MQTT Explorer
 
 1. Open MQTT Explorer.
 2. Connect MQTT Explorer to the same broker configured in `prj.conf`.
