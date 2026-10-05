@@ -220,7 +220,7 @@ In this file the following config topics are handled:
 - Posix API memory optimizations
 
 
-```Kconfig.transport
+Kconfig.transport
 | config MQTT_SAMPLE_TRANSPORT_DO_PUBLISH
 |    bool "Enable MQTT message publishing"
 |    default n
@@ -250,7 +250,7 @@ The file `src/modules/display/display.c` is programmed to display the timezone d
 In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/modules/display/dst_table_west.h`
 has a table with dst start and end epoch datetime stamps.
 
-```config
+config
 # Core Hardware Peripherals
 CONFIG_GPIO=y
 CONFIG_I2C=y
@@ -262,25 +262,25 @@ CONFIG_CHARACTER_FRAMEBUFFER=y
 CONFIG_HEAP_MEM_POOL_SIZE=16384
 
 |
-```Telemetry: 
+Telemetry: 
 |  This module handles the signalling of MQTT communication status
 |  from the Transport module to the Display module
 |
-```LEDs
+LEDs
 |  This version of this project uses LED2 to indicate the state of the MQTT connection.
 |  When MQTT connection is established, LED2 wil fade on and off.
 |  To make the fading effect possible a /boards/pwm_leds.overlay has been added
 !  
-´``config
+config
 # LED PWM 
 CONFIG_PWM=y
 
 ## Getting started
-```
+
 
 ### 1. Clone the repository
 
-```bash
+bash
 git clone https://github.com/paulskpt/nrf7002-mqtt-client.git
 cd nrf7002-mqtt-client
 ```
@@ -289,7 +289,7 @@ cd nrf7002-mqtt-client
 If you want to clone the original version of this project:
 git clone https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example.git
 cd nrf7002-mqtt-client-example
-```
+
 
 ### 2. Configure Wi-Fi and MQTT settings
 
@@ -311,10 +311,10 @@ From a Terminal Window with the nRF Connect SDK environment initialized:
 
 Setup a virtual environment:
 
-```Terminal
+Terminal
 In VSCode Terminal:
 - Install venv: python -m venv .venv
-```
+- 
 Activate the virtual environment
 ```
 <User>@<PCname> C:/<project_folder>: $ (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\nrf_projects\nrf7002-mqtt-client\.venv\Scripts\Activate.ps1)
@@ -324,21 +324,21 @@ After this activation you will see the prompt:
 (.venv)  <User>@<PCname> C:/<project_folder>: $
 ```
 
-```Install prerequisites
+Install prerequisites
    - python -m pip install --upgrade pip
    - Install west: `python -m pip install west`
    - Make sure your .gitignore contains: .venv/
    - Let Zephyr install its required Python packages: `west packages pip --install`
-```
 
-```Note that the following packages are not installed by Pip:
+
+Note that the following packages are not installed by Pip:
     - CMake;
     - Ninja;
     - Git;
     - Zephyr SDK / toolchain;
     - nRF Connect SDK;
     - Nordic command-line/debugging tools
-```
+
 
 NOTE: if, in VSCode, pops up (down-right in the VSCode Window) the message: 
 ```
@@ -349,28 +349,31 @@ Click on: `No`
 
 ### 4. Build the firmware
 
-```Build command
+Build command
 
-```Terminal
+Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west build -b nrf54lm20dk/nrf54lm20b/cpuapp --pristine -- -DSB_CONFIG_WIFI_NRF70=y -DSHIELD=nrf7002eb2 -DDTC_OVERLAY_FILE="boards/oled.overlay;boards/pwm_leds.overlay"
 ```
 or when you want to redirect the build output to a file:
 ```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west build -b nrf54lm20dk/nrf54lm20b/cpuapp --pristine -- -DSB_CONFIG_WIFI_NRF70=y -DSHIELD=nrf7002eb2 -DDTC_OVERLAY_FILE="boards/oled.overlay;boards/pwm_leds.overlay" 2>&1 | Tee-Object -FilePath pristine_build_log_1.txt
-```
+
 When a build fails, delete the build directory
-```Terminal
+
+Terminal
 (.venv)  <User>@<PCname> C:/<project_folder>: $ Remove-Item -Recurse -Force build  
 
 ### 4. Flash the board
 
-```Terminal
+Terminal
+```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ west flash -d build
 ```
 
 To deactivate virtual environment
 
-```Terminal
+Terminal
+```
 (.venv)  <User>@<PCname> C:/<project_folder>: $ deactivate +<Enter>
 ```
 
@@ -385,8 +388,6 @@ Typical options include:
 - Tera Term
 - minicom
 - screen
-
-
 
 
 ### 6. Test with MQTT Explorer
@@ -447,7 +448,8 @@ This creates a simple two-way MQTT test loop between the development board and a
 
 Edit:
 
-```conf
+conf
+```
 CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 ```
 
@@ -457,7 +459,8 @@ Set the value to the desired publishing period in seconds.
 
 Edit:
 
-```conf
+conf
+```
 CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE="message"  # (by default not used in this version)
 ```
 
@@ -467,14 +470,16 @@ For a real product, replace this static payload with sensor data, device status,
 
 Edit:
 
-```conf
+conf
+```
 CONFIG_MQTT_SAMPLE_TRANSPORT_PUBLISH_TOPIC="publish/topic" # (by default not used in this version)
 CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC="sensors/Feath/ambient"
 ```
 
 A common production-style convention is:
 
-```text
+text
+```
 devices/<device-id>/telemetry
 devices/<device-id>/commands
 devices/<device-id>/status
@@ -490,7 +495,8 @@ A typical next step is to connect the sampler module to real sensor readings.
 
 Example payload ideas:
 
-```json
+json
+```
 {
   "temperature_c": 24.7,
   "humidity_percent": 48.2,
