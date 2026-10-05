@@ -200,7 +200,7 @@ CONFIG_MQTT_SAMPLE_TRIGGER_TIMEOUT_SECONDS=15
 +------------------------------------------------+--------------------------------------------------------------------------+
 ```
 
-```Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
+Board configuration  (file: `/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf`)
 
 In this file the following config topics are handled:
 - Logging
