@@ -251,29 +251,36 @@ In this moment this is done for the timezone `Europe/Lisbon`. The file `/src/mod
 has a table with dst start and end epoch datetime stamps.
 
 config
-### Core Hardware Peripherals
+- Core Hardware Peripherals
+```
 CONFIG_GPIO=y
 CONFIG_I2C=y
-
-### Enable the Universal Display Subsystem Core
+```
+- Enable the Universal Display Subsystem Core
+```
 CONFIG_DISPLAY=y
 CONFIG_CHARACTER_FRAMEBUFFER=y
-```# CONFIG_SSD1306=y```
-CONFIG_HEAP_MEM_POOL_SIZE=16384
 
-|
-Telemetry: 
-|  This module handles the signalling of MQTT communication status
-|  from the Transport module to the Display module
-|
-LEDs
-|  This version of this project uses LED2 to indicate the state of the MQTT connection.
-|  When MQTT connection is established, LED2 wil fade on and off.
-|  To make the fading effect possible a /boards/pwm_leds.overlay has been added
-!  
+CONFIG_HEAP_MEM_POOL_SIZE=16384
+```
+
+### Telemetry
+
+This module handles the signalling of MQTT communication status
+from the Transport module to the Display module
+
+### LEDs
+
+This version of this project uses LED2 to indicate the state of the MQTT connection.
+When MQTT connection is established, LED2 wil fade on and off.
+To make the fading effect possible a /boards/pwm_leds.overlay has been added
+
+
 config
-### LED PWM 
+- LED PWM
+```
 CONFIG_PWM=y
+```
 
 ## Getting started
 
