@@ -32,23 +32,23 @@ uart:~$
 [00:00:01.348,046] <inf> network: Static IP address (overridable): /255.255.255.0 -> 
 [00:00:01.358,320] <inf> network: Interface = 0x20001a88
 [00:00:01.366,132] <inf> network: PSK length: 16
-[00:00:01.373,282] <inf> network: SSID: Vodafone-8D96F1
+[00:00:01.373,282] <inf> network: SSID: Vodafone-______
 [00:00:01.381,014] <inf> network: Security: 1
 [00:00:02.753,614] <inf> network: Connection requested
-[00:00:03.719,258] <inf> wpa_supp: wlan0: SME: Trying to authenticate with 9c:b2:e8:fc:02:2c (SSID='Vodafone-8D96F1' freq=2447 MHz)
-[00:00:04.102,319] <inf> wpa_supp: wlan0: Trying to associate with 9c:b2:e8:fc:02:2c (SSID='Vodafone-8D96F1' freq=2447 MHz)
-[00:00:04.151,963] <inf> wpa_supp: wlan0: Associated with 9c:b2:e8:fc:02:2c
+[00:00:03.719,258] <inf> wpa_supp: wlan0: SME: Trying to authenticate with 9c:__:e8:__:02:__ (SSID='Vodafone-______' freq=2447 MHz)
+[00:00:04.102,319] <inf> wpa_supp: wlan0: Trying to associate with 9c:__:e8:__:02:__ (SSID='Vodafone-______' freq=2447 MHz)
+[00:00:04.151,963] <inf> wpa_supp: wlan0: Associated with 9c:__:e8:__:02:__
 [00:00:04.162,371] <inf> wpa_supp: wlan0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
-[00:00:04.202,096] <inf> wpa_supp: wlan0: WPA: Key negotiation completed with 9c:b2:e8:fc:02:2c [PTK=CCMP GTK=CCMP]
-[00:00:04.215,493] <inf> wpa_supp: wlan0: CTRL-EVENT-CONNECTED - Connection to 9c:b2:e8:fc:02:2c completed [id=0 id_str=]
+[00:00:04.202,096] <inf> wpa_supp: wlan0: WPA: Key negotiation completed with 9c:__:e8:__:02:__ [PTK=CCMP GTK=CCMP]
+[00:00:04.215,493] <inf> wpa_supp: wlan0: CTRL-EVENT-CONNECTED - Connection to 9c:__:e8:__:02:__ completed [id=0 id_str=]
 [00:00:04.234,013] <inf> network: Wi-Fi Connected, waiting for IP address
 [00:00:04.243,248] <inf> network: Connected
 Connected
 [00:00:04.262,610] <inf> network: ============
 [00:00:06.447,485] <inf> network: IPv4 address acquired
-[00:00:06.455,195] <inf> network: DHCP IP address: 192.168.1.95
-[00:00:11.464,079] <inf> mqtt_helper_custom: Using static IP address: 192.168.1.114
-[00:00:11.474,243] <inf> mqtt_helper_custom: IPv4 Address found 192.168.1.114
+[00:00:06.455,195] <inf> network: DHCP IP address: 192.168._.___
+[00:00:11.464,079] <inf> mqtt_helper_custom: Using static IP address: 192.168._.___
+[00:00:11.474,243] <inf> mqtt_helper_custom: IPv4 Address found 192.168._.___
 [00:00:11.483,833] <inf> mqtt_helper_custom: Broker initialized successfully
 [00:00:11.512,150] <inf> mqtt_helper_custom: MQTT connection request sent
 [00:00:11.530,742] <inf> transport: Connected to MQTT broker
