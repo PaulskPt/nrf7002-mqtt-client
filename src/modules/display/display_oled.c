@@ -1,4 +1,4 @@
-/*! @file display.c
+/*! @file display_oled.c
  * @brief Implements the use of an 1.12in 128x128 mono OLED
  *
  * @author Paulus Schulinck (Github @PaulskPt)
@@ -485,13 +485,13 @@ void screen_update_DateTime(void) {
 		}
 
 		snprintf(dow_str, sizeof(dow_str), "%s", 
-			(time_info.tm_wday == 0) ? "Su" :
-			(time_info.tm_wday == 1) ? "Mo" :
-			(time_info.tm_wday == 2) ? "Tu" :
-			(time_info.tm_wday == 3) ? "We" :
-			(time_info.tm_wday == 4) ? "Th" :
-			(time_info.tm_wday == 5) ? "Fr" :
-			(time_info.tm_wday == 6) ? "Sa" : "ERR");
+			(time_info.tm_wday == 0) ? "Sun" :
+			(time_info.tm_wday == 1) ? "Mon" :
+			(time_info.tm_wday == 2) ? "Tue" :
+			(time_info.tm_wday == 3) ? "Wed" :
+			(time_info.tm_wday == 4) ? "Thu" :
+			(time_info.tm_wday == 5) ? "Fri" :
+			(time_info.tm_wday == 6) ? "Sat" : "ERR");
 
 		// For date_str ("YYYY-MM-DD")
 		strftime(date_str, sizeof(date_str), "%Y-%m-%d", &time_info);

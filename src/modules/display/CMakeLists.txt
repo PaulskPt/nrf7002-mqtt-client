@@ -5,4 +5,4 @@
 #
 
 # 1.12in 128x128 mono OLED board
-target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/display.c)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/display_oled.c)
