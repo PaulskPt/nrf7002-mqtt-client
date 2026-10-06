@@ -310,7 +310,7 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 
 		static char txt0[] = "On_MQTT_Publish(): ";
 
-	LOG_INF("%sReceived payload: %.*s on topic: %.*s", \
+	LOG_INF("%sReceived payload: %.*s on topic: \"%.*s\"", \
 		txt0, \
 		payload.size, payload.ptr, topic.size, topic.ptr);
 
@@ -340,7 +340,6 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 		g_telemetry.temperature = strtof(temp_ptr, NULL);
 	}
 
-	
 	if (epoch_ptr)
 		g_telemetry.epoch_logIt = true;
 	if (temp_ptr)
@@ -355,7 +354,8 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 			(int)g_telemetry.temperature, \
 			((int)(g_telemetry.temperature * 10)) % 10);
 
-		LOG_INF("Epoch=%lld, Temp=%s",
+		LOG_INF("%sselected data: Epoch=%lld, Temp=%s",
+			txt0,
 			g_telemetry.epoch,
 			transport_temperature_str);
 	} else {

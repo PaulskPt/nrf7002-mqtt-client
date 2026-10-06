@@ -67,6 +67,8 @@ struct tm time_info_old = {0}; // Old time_info for comparison
 
 // from Google AI. See set_system_epoch()
 static bool epoch_changed = false;
+static bool epoch_err_msg_shown = false;
+static bool datetime_shown = false;
 static int64_t last_epoch = 0; // last epoch received from MQTT telemetry
 static int64_t epoch_baseline_seconds = 0; // is a copy of g_telemetry.epoch
 static int64_t uptime_baseline_ms = 0; // is a copy of k_cycle_get_64() when the epoch was received
@@ -336,7 +338,9 @@ void set_system_from_epoch(void)
 	// Update the underlying system wall-clock (calculated seamlessly over GRTC)
 	if (clock_settime(CLOCK_REALTIME, &ts) == 0) {
 		is_time_synchronized = true;
-		LOG_INF("%sSystem wall-clock synchronized from telemetry epoch: %lld", txt0, g_telemetry.epoch);
+		if(my_debug) {
+			LOG_INF("%sSystem wall-clock synchronized from telemetry epoch: %lld", txt0, g_telemetry.epoch);
+		}
 	} else {
 		is_time_synchronized = false;
 	}
@@ -371,10 +375,10 @@ void epoch_to_string(void)
 	// Google AI: Use PRId64 to perfectly match int64_t on any compiler/architecture
 	snprintf(epoch_str, sizeof(epoch_str), "%" PRId64, g_telemetry.epoch);
 
-	LOG_INF("%sepoch_str=%s", txt0, epoch_str);
+	if(my_debug) {
+		LOG_INF("%sepoch_str=\"%s\"", txt0, epoch_str);
+	}
 }
-
-static bool epoch_err_msg_shown = false;
 
 /**
  * @brief updates the global date_str and time_str variables 
@@ -386,7 +390,7 @@ void screen_update_DateTime(void) {
 	/* RAW INCOMING EPOCH STRING DISPLAY: Shifted from Row 96 up to Row 32 */
 
 	/* Continuous serial diagnostic output check */
-	if (g_telemetry.epoch_logIt) {
+	if (my_debug && g_telemetry.epoch_logIt) {
 		LOG_INF("%sMQTT received epoch = \"%s\"", txt0,
 			epoch_str);
 
@@ -480,11 +484,6 @@ void screen_update_DateTime(void) {
 			return;
 		}
 
-
-		if (my_debug) {
-			LOG_INF("%sDate changed: %s, Time changed: %s", txt0, date_changed ? "true" : "false", time_changed ? "true" : "false");
-		}
-
 		snprintf(dow_str, sizeof(dow_str), "%s", 
 			(time_info.tm_wday == 0) ? "Su" :
 			(time_info.tm_wday == 1) ? "Mo" :
@@ -520,7 +519,8 @@ void screen_update_DateTime(void) {
 			//time_changed = true;
 		}
 
-		if (my_debug) {
+		if (!datetime_shown) {
+			datetime_shown = true;
 			if (date_changed) {
 				LOG_INF("%sDate changed to: %s", txt0, date_str);
 			}
@@ -627,14 +627,16 @@ void screen_update(void) {
 
 				if (len_temperature_str > 0) {
 
-					if (g_telemetry.temp_logIt) {
+					if (my_debug && g_telemetry.temp_logIt) {
 						LOG_INF("%sMQTT received temperature = \"%s\" (Length: %d)", txt0, temperature_str, len_temperature_str);
 						g_telemetry.temp_logIt = false; /* Toggle state flag guard */
 					}
 				
 					/*  FORMAT AND COPY SENSOR METRIC INTO DISPLAY BUFFER */
 					snprintf(display_buffer, sizeof(display_buffer), "Temp: %s C", temperature_str);
-					LOG_INF("%ssensor temperature displayed: \"%s\"", txt0, display_buffer);
+					if (my_debug) {
+						LOG_INF("%ssensor temperature displayed: \"%s\"", txt0, display_buffer);
+					}
 
 					/*  PERSISTENT SENSOR METRIC DISPLAY: Pushed down from Row 80 to Row 96 */
 					if (strlen(display_buffer) > 0) {
@@ -654,7 +656,7 @@ void screen_update(void) {
 // 1. This is your loop task (Notice it uses the 3 required NULL pointer arguments)
 void Display_Task(void *p1, void *p2, void *p3) {
 	// int err;
-    static char txt0[] = "Display_Task():  ";
+    static char txt0[] = "Display_Task(): ";
 	bool mqtt_is_connected_local = false;
 	bool mqtt_is_connected_shown = false;
 
@@ -704,6 +706,7 @@ void Display_Task(void *p1, void *p2, void *p3) {
 		epoch_changed = g_telemetry.epoch != last_epoch ? true : false;
 
 		if (epoch_changed) {
+			datetime_shown = false; /* Reset the flag to allow logging of date/time changes */
 			/* We have new MQTT data */
 			LOG_INF("%sepoch has changed? %s", txt0, epoch_changed ? "Yes" : "No");
 			LOG_INF("%sg_telemetry.epoch= %lld, last_epoch= %lld", txt0, g_telemetry.epoch, last_epoch);

@@ -68,42 +68,49 @@ struct mqtt_helper_custom_buf {
 * @brief handler event's type
 */
 typedef void (*mqtt_helper_custom_handler_t)(struct mqtt_evt *evt);
+
 /*! @typedef mqtt_helper_custom_on_connack_t
 * @brief type related to the connack callback
 */
 typedef void (*mqtt_helper_custom_on_connack_t)	\
 			(enum mqtt_conn_return_code return_code);
+
 /*! @typedef mqtt_helper_custom_on_disconnect_t
 * @brief type related to the disconnect callback
 */
 typedef void (*mqtt_helper_custom_on_disconnect_t)(int result);
+
 /*! @typedef mqtt_helper_custom_on_publish_t
 * @brief type related to the publish callback
 */
 typedef void (*mqtt_helper_custom_on_publish_t)	\
 			(struct mqtt_helper_custom_buf topic_buf, \
 			struct mqtt_helper_custom_buf payload_buf);
+
 typedef void (*mqtt_helper_custom_on_disconnect_t)(int result);
+
 /*! @typedef mqtt_helper_custom_on_puback_t
 * @brief type related to the puback callback
 */
 typedef void (*mqtt_helper_custom_on_puback_t) \
 			(uint16_t message_id, int result);
+
 /*! @typedef mqtt_helper_custom_on_suback_t
 * @brief type related to the suback callback
 */
 typedef void (*mqtt_helper_custom_on_suback_t) \
 			(uint16_t message_id, int result);
+
 /*! @typedef mqtt_helper_custom_on_pingresp_t
 * @brief type related to the ping response callback
 */
 typedef void (*mqtt_helper_custom_on_pingresp_t)(void);
+
 /*! @typedef mqtt_helper_custom_on_pingresp_t
 * @brief type related to the error callback
 */
 typedef void (*mqtt_helper_custom_on_error_t) \
 			(enum mqtt_helper_custom_error error);
-
 
 /*! @struct mqtt_helper_custom_cfg
 * @brief struct containing all the connection callbacks
