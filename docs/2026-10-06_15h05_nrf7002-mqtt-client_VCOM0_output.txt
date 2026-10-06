@@ -1,0 +1,77 @@
+Tuesday 2026-10-06 15h05 PT
+Board: Nordic nRF54LM20-DK (nRF54LM20B)
+IDE: VSCode with extension "nRF Connect for VS Code"
+Project: nrf7002-mqtt-client
+
+IMPORTANT NOTES:
+----------------
+After a long debugging session with help of MS Copilot because the app connected to WiFi, disconnected and connected to WiFi again
+with various error messages.
+The source of the problem was in the files:
+/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf 
+and /root/prj.conf.
+In both files this line has to contain "=n" instead of "=y": CONFIG_L2_WIFI_CONNECTIVITY_AUTO_CONNECT=n    
+Then in /root/prj.conf, this line also has to contain "=n": CONFIG_NET_CONFIG_AUTO_INIT=n
+This last line prevents that the zephyr system tries to automatically establish a WiFi connection at initialization. 
+
+VSCode VCOM0 (COM14) output:
+----------------------------
+
+uart:~$ 
+[00:00:00.021,383] <inf> wifi_nrf_bus: SPIM spi@c8000: freq = 8 MHz
+[00:00:00.030,103] <inf> wifi_nrf_bus: SPIM spi@c8000: latency = 0
+[00:00:00.291,744] <inf> fs_nvs: 8 Sectors of 4096 bytes
+[00:00:00.299,565] <inf> fs_nvs: alloc wra: 0, fd0
+[00:00:00.306,871] <inf> fs_nvs: data wra: 0, 0
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[00:00:00.328,646] <inf> wifi_supplicant: wpa_supplicant initialized
+[00:00:00.337,969] <inf> network: Starting nrf54lm20dk with CPU frequency: 128 MHz
+[00:00:00.412,326] <inf> display: Display contrast successfully initialized to 50
+[00:00:00.422,263] <inf> display: screen_init(): Setting the initial screen
+[00:00:01.348,046] <inf> network: Static IP address (overridable): /255.255.255.0 -> 
+[00:00:01.358,320] <inf> network: Interface = 0x20001a88
+[00:00:01.366,132] <inf> network: PSK length: 16
+[00:00:01.373,282] <inf> network: SSID: Vodafone-______
+[00:00:01.381,014] <inf> network: Security: 1
+[00:00:02.753,614] <inf> network: Connection requested
+[00:00:03.719,258] <inf> wpa_supp: wlan0: SME: Trying to authenticate with 9c:__:e8:fc:02:__ (SSID='Vodafone-______' freq=2447 MHz)
+[00:00:04.102,319] <inf> wpa_supp: wlan0: Trying to associate with 9c:__:e8:fc:02:__ (SSID='Vodafone-______' freq=2447 MHz)
+[00:00:04.151,963] <inf> wpa_supp: wlan0: Associated with 9c:__:e8:fc:02:__
+[00:00:04.162,371] <inf> wpa_supp: wlan0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[00:00:04.202,096] <inf> wpa_supp: wlan0: WPA: Key negotiation completed with 9c:__:e8:fc:02:__ [PTK=CCMP GTK=CCMP]
+[00:00:04.215,493] <inf> wpa_supp: wlan0: CTRL-EVENT-CONNECTED - Connection to 9c:__:e8:fc:02:__ completed [id=0 id_str=]
+[00:00:04.234,013] <inf> network: Wi-Fi Connected, waiting for IP address
+[00:00:04.243,248] <inf> network: Connected
+Connected
+[00:00:04.262,610] <inf> network: ============
+[00:00:06.447,485] <inf> network: IPv4 address acquired
+[00:00:06.455,195] <inf> network: DHCP IP address: 192.168._.___
+[00:00:11.464,079] <inf> mqtt_helper_custom: Using static IP address: 192.168._.___
+[00:00:11.474,243] <inf> mqtt_helper_custom: IPv4 Address found 192.168._.___
+[00:00:11.483,833] <inf> mqtt_helper_custom: Broker initialized successfully
+[00:00:11.512,150] <inf> mqtt_helper_custom: MQTT connection request sent
+[00:00:11.530,742] <inf> transport: Connected to MQTT broker
+[00:00:11.539,854] <inf> transport: Hostname: RPiCM5.local
+[00:00:11.547,846] <inf> transport: Client ID: NordicMQTTClient
+[00:00:11.556,271] <inf> transport: Port: 1883
+[00:00:11.563,234] <inf> transport: TLS: No
+[00:00:11.569,939] <inf> transport: Username: noUser
+[00:00:11.577,417] <inf> transport: Password: noPassword
+[00:00:11.585,931] <inf> led_fade: LED 2 fading effect started
+[00:00:11.597,501] <inf> transport: Subscribed to topic sensors/Feath/ambient
+[00:00:11.755,205] <inf> display: screen_update(): MQTT connected? Yes
+[00:00:15.348,215] <wrn> transport: Publishing is disabled by configuration.
+[00:00:28.506,315] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791295518},"reads":{"t":{"v":31.4,"u":"C","mn":-10,"mx":50},"p":{"v":1001.7,"u":"mB","mn":800,"mx":1200},"a":{"v":121.3,"u":"m","mn":0,"mx":3000},"h":{"v":49.9,"u":"%","mn":0,"mx":100}}} on topic: "sensors/Feath/ambient"
+[00:00:28.541,720] <inf> transport: On_MQTT_Publish(): selected data: Epoch=1791295518, Temp=31.4
+[00:00:29.060,554] <inf> display: Display_Task(): epoch has changed? Yes
+[00:00:29.069,713] <inf> display: Display_Task(): g_telemetry.epoch= 1791295518, last_epoch= 0
+[00:00:29.080,859] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791295518
+[00:00:29.710,633] <inf> display: screen_update_DateTime(): Date changed to: 2026-10-06
+[00:00:29.721,079] <inf> display: screen_update_DateTime(): Time changed to: 15:05:18
+[00:01:28.511,699] <inf> transport: On_MQTT_Publish(): Received payload: {"hd":{"ow":"Feath","de":"Lab","dc":"BME280","sc":"meas","vt":"f","t":1791295578},"reads":{"t":{"v":31.3,"u":"C","mn":-10,"mx":50},"p":{"v":1001.7,"u":"mB","mn":800,"mx":1200},"a":{"v":121.3,"u":"m","mn":0,"mx":3000},"h":{"v":50.9,"u":"%","mn":0,"mx":100}}} on topic: "sensors/Feath/ambient"
+[00:01:28.546,912] <inf> transport: On_MQTT_Publish(): selected data: Epoch=1791295578, Temp=31.3
+[00:01:28.921,915] <inf> display: Display_Task(): epoch has changed? Yes
+[00:01:28.931,071] <inf> display: Display_Task(): g_telemetry.epoch= 1791295578, last_epoch= 1791295518
+[00:01:28.942,994] <inf> display: set_system_from_epoch(): Time synchronized! Baseline Epoch: 1791295578
+[00:01:29.572,832] <inf> display: screen_update_DateTime(): Time changed to: 15:06:18
