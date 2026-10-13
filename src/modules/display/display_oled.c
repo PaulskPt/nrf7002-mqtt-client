@@ -665,7 +665,7 @@ void screen_update(void) {
 			}
 		}
 		/* Re-render changes directly onto your Adafruit glass surface */
-		/* Pus the changes to the screen */
+		/* Push the changes to the screen */
 		int ret;
 
 		ret = cfb_framebuffer_finalize(display_dev);
