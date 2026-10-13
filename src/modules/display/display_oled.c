@@ -47,6 +47,9 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 #include <zephyr/drivers/rtc.h>
 #include <zephyr/sys/time_units.h>
 
+// Advice MS Copilot 
+#include <zephyr/drivers/gpio.h>
+
 #ifndef ARCH_STACK_PTR_ALIGN
 #define ARCH_STACK_PTR_ALIGN 4
 #endif
@@ -552,7 +555,21 @@ void screen_update(void) {
 		// cfb_framebuffer_set_font(display_dev, 0);
 		screen_init();
 		/* Push changes to the screen */
-		cfb_framebuffer_finalize(display_dev);
+		int ret;
+
+		ret = cfb_framebuffer_finalize(display_dev);
+        
+		/* MS Copilot: The goal is not recovery. The goal is diagnosis. */
+		if (ret < 0) {
+
+			LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
+
+			screen_init();
+
+			ret = cfb_framebuffer_finalize(display_dev);
+
+			LOG_ERR("retry finalize ret=%d", ret);
+		}
 	}
 
 	/* ==================================================================== */
@@ -649,7 +666,19 @@ void screen_update(void) {
 		}
 		/* Re-render changes directly onto your Adafruit glass surface */
 		/* Pus the changes to the screen */
-		cfb_framebuffer_finalize(display_dev);
+		int ret;
+
+		ret = cfb_framebuffer_finalize(display_dev);
+
+		if (ret < 0) {
+		    LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
+			
+			screen_init();
+
+			ret = cfb_framebuffer_finalize(display_dev);
+
+			LOG_ERR("retry finalize ret=%d", ret);
+		}
 	}
 }
 
