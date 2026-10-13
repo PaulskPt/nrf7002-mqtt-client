@@ -591,6 +591,7 @@ Check that:
 ### Updates
 
 - 2026-10-04: added functionality to update the time in between MQTT epoch updates.
+- 2026-10-13: changed I2C clock-frequency in boards/oled.overlay, to stop I2C lockup.
 
 ## Related resources
 
