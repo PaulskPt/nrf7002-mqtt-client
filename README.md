@@ -1,4 +1,4 @@
-## Abluethinginthecloud nRF7002 MQTT Client [Example](https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example),
+## Abluethinginthecloud nRF7002 MQTT Client Example [Here...](https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example),
 ## rewritten for a Nordic nRF54LM20-DK
 
 <div align="center">
