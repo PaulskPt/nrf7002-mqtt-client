@@ -163,8 +163,7 @@ Select the Wi-Fi security mode used by your router. For example, WPA2:
 
 ```conf
 CONFIG_STA_KEY_MGMT_WPA2=y
-```
-```conf
+
 # Next two lines added on advice of MS Copilot to prevent double WiFi connection issue.
 # See also boards/nrf54lm20dk_nrf54lmb_cpuapp.conf
 # The next line has to stay n to prevent double WiFi connection attemtps with error messages.  
