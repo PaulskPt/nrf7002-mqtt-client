@@ -219,7 +219,7 @@ In this file the following config topics are handled:
 - Heap sizes
 - Posix API memory optimizations
 
-
+```
 Kconfig.transport
 | config MQTT_SAMPLE_TRANSPORT_DO_PUBLISH
 |    bool "Enable MQTT message publishing"
@@ -239,7 +239,7 @@ Kconfig.transport
 |       return; // Return early
 |   }
 |
-
+```
 ---
 
 ### Display configuration
