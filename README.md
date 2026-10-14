@@ -166,9 +166,11 @@ CONFIG_STA_KEY_MGMT_WPA2=y
 
 ```
 See also: boards/nrf54lm20dk_nrf54lmb_cpuapp.conf, lines 98-101 [here](https://github.com/PaulskPt/nrf7002-mqtt-client/blob/main/boards/nrf54lm20dk_nrf54lm20b_cpuapp.conf)
+
 ```
 # Next lines added on advice of MS Copilot to prevent double WiFi connection issue.
-# The next line has to stay n to prevent double WiFi connection attemtps with error messages.  
+# The next line has to stay n to prevent double WiFi connection attemtps with error messages.
+```Conf
 CONFIG_L2_WIFI_CONNECTIVITY_AUTO_CONNECT=n
 CONFIG_NET_CONFIG_AUTO_INIT=n
 ```
