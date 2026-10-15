@@ -49,6 +49,8 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 
 // Advice MS Copilot 
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/sys/reboot.h>
+
 
 #ifndef ARCH_STACK_PTR_ALIGN
 #define ARCH_STACK_PTR_ALIGN 4
@@ -67,6 +69,13 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 static bool my_debug = false;
 
 struct tm time_info_old = {0}; // Old time_info for comparison
+
+static const struct gpio_dt_spec oled_reset =
+{
+    .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)),
+    .pin = 3,
+    .dt_flags = GPIO_ACTIVE_LOW
+};
 
 // from Google AI. See set_system_epoch()
 static bool epoch_changed = false;
@@ -125,6 +134,53 @@ static bool time_changed = false;
 const char *zone_label = ""; /* Starts blank until time data packet lands */
 
 /* end of global variables */
+
+void reboot_board(bool warm)
+{
+    LOG_ERR("Rebooting board...");
+
+    k_msleep(100);
+
+	if (warm)
+	    sys_reboot(SYS_REBOOT_WARM);
+	else
+	    sys_reboot(SYS_REBOOT_COLD);
+}
+
+static void display_reset_oled(void)
+{
+	static char txt0[] = "display_reset_oled(): ";
+	static char txt1[] = "OLED reset GPIO device not ready";
+	static char txt2[] = "Failed to configure OLED reset pin ";
+	static char txt3[] = "Resetting OLED";
+	static char txt4[] = "OLED hardware reset complete";
+    int ret;
+
+    if (!device_is_ready(oled_reset.port)) {
+        LOG_ERR("%s%s", txt0, txt1);
+        return;
+    }
+
+    ret = gpio_pin_configure_dt(&oled_reset, GPIO_OUTPUT_INACTIVE);
+    if (ret < 0) {
+        LOG_ERR("%s%s (%d)", txt0, txt2, ret);
+        return;
+    }
+
+    LOG_WRN("%s%s", txt0, txt3);
+
+    /* Active-low reset */
+    gpio_pin_set_dt(&oled_reset, 1);
+    k_msleep(10);
+
+    gpio_pin_set_dt(&oled_reset, 0);
+    k_msleep(10);
+
+    gpio_pin_set_dt(&oled_reset, 1);
+    k_msleep(100);
+
+    LOG_WRN("%s%s", txt0, txt4);
+}
 
 /**
 * @brief Function sets the contrast of the screen
@@ -542,6 +598,7 @@ void screen_update(void) {
 	if ( (!display_dev) || (!device_is_ready(display_dev)) ) return;
 
 	static char txt0[] = "screen_update(): ";
+	static uint8_t oled_recovery_count;
 	char temperature_str[16];
 	uint16_t len_temperature_str;
 
@@ -556,22 +613,40 @@ void screen_update(void) {
 		screen_init();
 		/* Push changes to the screen */
 		int ret;
-
+		
 		ret = cfb_framebuffer_finalize(display_dev);
-        
-		/* MS Copilot: The goal is not recovery. The goal is diagnosis. */
+
 		if (ret < 0) {
-
-			LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
-
+		    LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
+			oled_recovery_count++;
+    		LOG_ERR("OLED recovery attempt %u", oled_recovery_count);
+			display_reset_oled();
 			screen_init();
 
 			ret = cfb_framebuffer_finalize(display_dev);
-
 			LOG_ERR("retry finalize ret=%d", ret);
+			if ((ret < 0) && (oled_recovery_count >= 3)) {
+
+     			LOG_ERR("OLED recovery failed, rebooting board");
+
+				reboot_board(false); // reboot COLD
+    		}
+			if (ret == 0) {
+
+				if (oled_recovery_count) {
+
+					LOG_INF("OLED recovered after %u reset attempt(s)",
+							oled_recovery_count);
+				}
+				oled_recovery_count = 0;
+			}
+		}
+		else
+		{
+		    oled_recovery_count = 0;
 		}
 	}
-
+	
 	/* ==================================================================== */
 	/* CASCADING PUSHED-DOWN VERTICAL LAYOUT MATRIX                         */
 	/* ==================================================================== */
@@ -672,14 +747,35 @@ void screen_update(void) {
 
 		if (ret < 0) {
 		    LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
-			
+			oled_recovery_count++;
+    		LOG_ERR("OLED recovery attempt %u", oled_recovery_count);
+			display_reset_oled();
 			screen_init();
 
 			ret = cfb_framebuffer_finalize(display_dev);
-
 			LOG_ERR("retry finalize ret=%d", ret);
+			if ((ret < 0) && (oled_recovery_count >= 3)) {
+
+     			LOG_ERR("OLED recovery failed, rebooting board");
+
+				reboot_board(false);  // reboot COLD
+    		}
+			if (ret == 0) {
+
+				if (oled_recovery_count) {
+
+					LOG_INF("OLED recovered after %u reset attempt(s)",
+							oled_recovery_count);
+				}
+				oled_recovery_count = 0;
+			}
+		}
+		else
+		{
+		    oled_recovery_count = 0;
 		}
 	}
+
 }
 
 // 1. This is your loop task (Notice it uses the 3 required NULL pointer arguments)
