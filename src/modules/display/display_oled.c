@@ -192,9 +192,9 @@ void setContrast()
 	int contr = 50;
 	int err = display_set_contrast(display_dev, contr);
 	if (err) {
-		LOG_WRN("Display set contrast failed (err %d)", err);
+		LOG_WRN(" Display set contrast failed (err %d)", err);
 	} else {
-		LOG_INF("Display contrast successfully initialized to %d", contr);
+		LOG_INF(" Display contrast successfully initialized to %d", contr);
 	}
 }
 
@@ -342,7 +342,7 @@ void screen_header(void) {
  */
 void screen_init(void) {
 	static char txt0[] = "screen_init(): ";
-	LOG_INF("%sSetting the initial screen", txt0);
+	LOG_INF(" %sSetting the initial screen", txt0);
 	screen_header();
 	screen_line();
 	cfb_print(display_dev, "No Epoch", 0, 32);
@@ -388,7 +388,7 @@ void update_datetime_from_system_clock(void) {
  */
 void set_system_from_epoch(void) 
 {
-	static char txt0[] = "set_system_from_epoch(): ";
+	static char txt0[] = "  set_system_from_epoch(): ";
 	if (g_telemetry.epoch <= 0)
 		return;
 
@@ -446,7 +446,7 @@ void epoch_to_string(void)
  * from the received telemetry epoch value
  */
 void screen_update_DateTime(void) {
-	static char txt0[] = "screen_update_DateTime(): ";
+	static char txt0[] = "  screen_update_DateTime(): ";
 
 	/* RAW INCOMING EPOCH STRING DISPLAY: Shifted from Row 96 up to Row 32 */
 
@@ -599,7 +599,7 @@ void screen_update(void) {
 
 	if ( (!display_dev) || (!device_is_ready(display_dev)) ) return;
 
-	static char txt0[] = "screen_update(): ";
+	static char txt0[] = "  screen_update(): ";
 	static uint8_t oled_recovery_count;
 	char temperature_str[16];
 	uint16_t len_temperature_str;
@@ -783,7 +783,7 @@ void screen_update(void) {
 // 1. This is your loop task (Notice it uses the 3 required NULL pointer arguments)
 void Display_Task(void *p1, void *p2, void *p3) {
 	// int err;
-    static char txt0[] = "Display_Task(): ";
+    static char txt0[] = "  Display_Task(): ";  
 	bool mqtt_is_connected_local = false;
 	bool mqtt_is_connected_shown = false;
 
@@ -838,9 +838,9 @@ void Display_Task(void *p1, void *p2, void *p3) {
 			/* We have new MQTT data */
 			// LOG_INF("%sepoch has changed? %s", txt0, epoch_changed ? "Yes" : "No");
 			// Thread-safe, formatted, and colorized exactly how you wanted! Yellow on Red
-			LOG_INF("%sepoch has changed? " CLR_YEL_ON_RED("%s"), txt0, epoch_changed ? "Yes" : "No "); 
+			LOG_INF("%s" CLR_B_GREEN("epoch has changed? ") CLR_B_YELLOW("%s"), txt0, epoch_changed ? "Yes" : "No "); 
 
-			LOG_INF("%sg_telemetry.epoch= %lld, last_epoch= %lld", txt0, g_telemetry.epoch, last_epoch);
+			LOG_INF("%s" CLR_B_GREEN("g_telemetry.epoch: ") CLR_B_YELLOW("%lld") "," CLR_B_GREEN("last_epoch: ") CLR_B_YELLOW("%lld"), txt0, g_telemetry.epoch, last_epoch);
 
 			/* copy to global variables */
 			last_epoch = g_telemetry.epoch;

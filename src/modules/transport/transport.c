@@ -312,12 +312,14 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 
 		static char txt0[] = "On_MQTT_Publish(): ";
 
+	/*
     LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s ") CLR_B_GREEN("on topic:") "\"" CLR_B_YELLOW("%.*s") "\"", 
         txt0, 
         payload.size, 
         payload.ptr, 
         topic.size, 
         topic.ptr);
+    */
 
 	/* Extract EPOCH */
 	char *epoch_ptr = strstr(payload.ptr, "\"vt\":\"f\",\"t\":");
@@ -348,6 +350,41 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 		g_telemetry.epoch_logIt = true;
 	if (temp_ptr)
 		g_telemetry.temp_logIt = true;
+
+
+	// Find the exact address where "reads" begins in the payload buffer
+	char *reads_ptr = strstr((char *)payload.ptr, "\"reads\"");
+
+	if (reads_ptr != NULL) {
+		// Calculate the byte length of everything BEFORE "reads"
+		int header_len = reads_ptr - (char *)payload.ptr;
+		
+		// Calculate the remaining length for the "reads" portion
+		int reads_len = payload.size - header_len;
+
+		// 1. Print the first line (the header data up to the comma)
+		LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s"), 
+				txt0, 
+				header_len, 
+				payload.ptr);
+				
+		// 2. Print the second line (starts automatically on a new line via Zephyr's logging engine)
+		LOG_INF("%s" CLR_B_YELLOW("%.*s") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
+				txt0, 
+				reads_len, 
+				reads_ptr, 
+				topic.size, 
+				topic.ptr);
+	} else {
+		// Fallback: If the structure ever unexpectedly changes, print it normally on a single line
+		LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s ") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
+				txt0, 
+				payload.size, 
+				payload.ptr, 
+				topic.size, 
+				topic.ptr);
+	}
+
 	
 	if (epoch_ptr && temp_ptr) {
 		g_telemetry.valid = true;
@@ -358,7 +395,7 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 			(int)g_telemetry.temperature, \
 			((int)(g_telemetry.temperature * 10)) % 10);
 
-        LOG_INF("%s"  CLR_B_GREEN("selected data: ") "Epoch=" CLR_B_YELLOW("%lld") ", Temp=" CLR_B_YELLOW("%s"),
+        LOG_INF("%s"  CLR_B_GREEN("selected data") ", " CLR_B_GREEN("Epoch: ") CLR_B_YELLOW("%lld") ", " CLR_B_GREEN("Temp: ") CLR_B_YELLOW("%s"),
             txt0,
             g_telemetry.epoch,
             transport_temperature_str
@@ -385,7 +422,7 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 static void On_MQTT_Suback(__UINT16_TYPE__ messageID, int result)
 {
 	if ((messageID == SUBSCRIBE_TOPIC_ID) && (result == 0))
-		LOG_INF(CLR_B_GREEN("Subscribed to topic ") "\"%s\"", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC));
+		LOG_INF(CLR_B_GREEN("Subscribed to topic: ") "\"%s\"", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC));
 	else if (result)
 		LOG_ERR("Topic subscription failed, error: %d", result);
 	else 
