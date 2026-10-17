@@ -352,37 +352,44 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 		g_telemetry.temp_logIt = true;
 
 
-	// Find the exact address where "reads" begins in the payload buffer
+	// 1. Locate where "reads" starts
 	char *reads_ptr = strstr((char *)payload.ptr, "\"reads\"");
 
 	if (reads_ptr != NULL) {
-		// Calculate the byte length of everything BEFORE "reads"
-		int header_len = reads_ptr - (char *)payload.ptr;
-		
-		// Calculate the remaining length for the "reads" portion
-		int reads_len = payload.size - header_len;
+		// 2. Locate where the "a" key starts inside the "reads" section
+		char *a_ptr = strstr(reads_ptr, "\"a\"");
 
-		// 1. Print the first line (the header data up to the comma)
-		LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s"), 
-				txt0, 
-				header_len, 
-				payload.ptr);
-				
-		// 2. Print the second line (starts automatically on a new line via Zephyr's logging engine)
-		LOG_INF("%s" CLR_B_YELLOW("%.*s") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
-				txt0, 
-				reads_len, 
-				reads_ptr, 
-				topic.size, 
-				topic.ptr);
-	} else {
-		// Fallback: If the structure ever unexpectedly changes, print it normally on a single line
-		LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s ") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
-				txt0, 
-				payload.size, 
-				payload.ptr, 
-				topic.size, 
-				topic.ptr);
+		if (a_ptr != NULL) {
+			// Calculate the 3 explicit boundary segment lengths
+			int header_len = reads_ptr - (char *)payload.ptr;
+			int reads_to_a_len = a_ptr - reads_ptr;
+			int a_to_end_len = payload.size - (header_len + reads_to_a_len);
+
+			// Line 1: From start of payload up to "reads"
+			LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s"), 
+					txt0, header_len, payload.ptr);
+					
+			// Line 2: From "reads" up to the "a" key
+			LOG_INF("%s" CLR_B_YELLOW("%.*s"), 
+					txt0, reads_to_a_len, reads_ptr);
+					
+			// Line 3: From "a" key to the end, appended with the topic details
+			LOG_INF("%s" CLR_B_YELLOW("%.*s") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
+					txt0, a_to_end_len, a_ptr, topic.size, topic.ptr);
+		} 
+		else {
+			// Fallback A: "reads" was found but "a" was missing, split into 2 lines
+			int header_len = reads_ptr - (char *)payload.ptr;
+			int reads_len = payload.size - header_len;
+
+			LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s"), txt0, header_len, payload.ptr);
+			LOG_INF("%s" CLR_B_YELLOW("%.*s") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", txt0, reads_len, reads_ptr, topic.size, topic.ptr);
+		}
+	} 
+	else {
+		// Fallback B: Neither key found, print single line
+		LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s ") CLR_B_GREEN("on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", 
+				txt0, payload.size, payload.ptr, topic.size, topic.ptr);
 	}
 
 	
