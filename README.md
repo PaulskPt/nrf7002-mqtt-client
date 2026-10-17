@@ -604,6 +604,7 @@ Check that:
 
 - 2026-10-04: added functionality to update the time in between MQTT epoch updates.
 - 2026-10-13: changed I2C clock-frequency in boards/oled.overlay, to stop I2C lockup.
+- 2026-10-15: in file src/modules/display/display_oled.c added function reboot_board(). Added two calls to this new function from function screen_update().
 
 ## Related resources
 
