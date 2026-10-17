@@ -32,6 +32,7 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER( mqtt_helper_custom, CONFIG_MQTT_HELPER_LOG_LEVEL );
 
+#include <rtt_colors.h>  // The new ansi colors macros file
 
 /*! Define a custom MQTT_HELPER_STATIC macro that exposes internal variables 
 *  when unit testing. */
@@ -400,7 +401,7 @@ static int Broker_Initializer( \
 					&broker4->sin_addr.s_addr, \
 					ipv4_addr, \
 				  	sizeof( ipv4_addr ) );
-			LOG_INF( "IPv4 Address found %s", ipv4_addr );
+			LOG_INF( CLR_B_GREEN("IPv4 Address found: ") CLR_B_YELLOW("%s"), ipv4_addr );
 			break;
 		}
 
@@ -574,7 +575,7 @@ int MQTT_Helper_Custom_Connect( \
 		return err;
 	}
 
-	LOG_INF( "MQTT connection request sent" );
+	LOG_INF( CLR_B_GREEN("MQTT connection request sent") );
 
 	k_sem_give( &Connection_Poll_Semaphore );
 

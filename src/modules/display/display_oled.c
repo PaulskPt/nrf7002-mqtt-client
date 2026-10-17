@@ -12,6 +12,7 @@
 #include "../transport/transport.h"  // Added by Paulus Schulinck (Github @PaulskPt)
 #include <zephyr/logging/log.h>
 
+
 // LOG_MODULE_REGISTER(display, CONFIG_MQTT_SAMPLE_DISPLAY_LOG_LEVEL);
 LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replaced by this line. On advice MS Copilot
 #include <zephyr/arch/arch_interface.h>
@@ -51,6 +52,7 @@ LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replace
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/sys/reboot.h>
 
+#include <rtt_colors.h>  // The new ansi colors macros file
 
 #ifndef ARCH_STACK_PTR_ALIGN
 #define ARCH_STACK_PTR_ALIGN 4
@@ -407,7 +409,7 @@ void set_system_from_epoch(void)
 	if (is_time_synchronized) {
 		epoch_baseline_seconds = g_telemetry.epoch;
 		uptime_baseline_ms = k_uptime_get();
-		LOG_INF("%sTime synchronized! Baseline Epoch: %lld", txt0, epoch_baseline_seconds);
+		LOG_INF("%s" CLR_B_GREEN("Time synchronized!") " Baseline Epoch: %lld", txt0, epoch_baseline_seconds);
 	}
 }
 
@@ -581,10 +583,10 @@ void screen_update_DateTime(void) {
 		if (!datetime_shown) {
 			datetime_shown = true;
 			if (date_changed) {
-				LOG_INF("%sDate changed to: %s", txt0, date_str);
+				LOG_INF("%s" CLR_B_GREEN("Date changed to: ") CLR_B_YELLOW("%s"), txt0, date_str);
 			}
 			if (time_changed) {
-				LOG_INF("%sTime changed to: %s", txt0, time_str);
+				LOG_INF("%s" CLR_B_GREEN("Time changed to: ") CLR_B_YELLOW("%s"), txt0, time_str);
 			}
 		}
 	}
@@ -662,7 +664,7 @@ void screen_update(void) {
 		connected_msg_shown = false;
 	
 	if (!connected_msg_shown) {
-		LOG_INF("%sMQTT connected? %s", txt0, mqtt_is_connected ? "Yes" : "No");
+		LOG_INF("%s" CLR_B_GREEN("MQTT connected? ") CLR_B_YELLOW("%s"), txt0, mqtt_is_connected ? "Yes" : "No");
 		mqtt_is_connected_old = mqtt_is_connected;
 		connected_msg_shown = true;
 		screen_header(); /* Update the screen header */
@@ -809,6 +811,7 @@ void Display_Task(void *p1, void *p2, void *p3) {
 
 	screen_update();
 
+	// No SEGGER_RTT_Init() needed here! Zephyr took care of it at boot.
 
 	/* ==================================================================== */
 	/* MASTER TICK REFRESH ENGINE LOOP                                      */
@@ -833,8 +836,12 @@ void Display_Task(void *p1, void *p2, void *p3) {
 		if (epoch_changed) {
 			datetime_shown = false; /* Reset the flag to allow logging of date/time changes */
 			/* We have new MQTT data */
-			LOG_INF("%sepoch has changed? %s", txt0, epoch_changed ? "Yes" : "No");
+			// LOG_INF("%sepoch has changed? %s", txt0, epoch_changed ? "Yes" : "No");
+			// Thread-safe, formatted, and colorized exactly how you wanted! Yellow on Red
+			LOG_INF("%sepoch has changed? " CLR_YEL_ON_RED("%s"), txt0, epoch_changed ? "Yes" : "No "); 
+
 			LOG_INF("%sg_telemetry.epoch= %lld, last_epoch= %lld", txt0, g_telemetry.epoch, last_epoch);
+
 			/* copy to global variables */
 			last_epoch = g_telemetry.epoch;
 

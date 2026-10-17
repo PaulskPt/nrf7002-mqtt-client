@@ -48,6 +48,8 @@
 #include "../telemetry/telemetry.h"
 #include <stdlib.h>
 
+#include <rtt_colors.h>  // The new ansi colors macros file
+
 /* Provide a safe default queue size if the project config does not define it. */
 #ifndef CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE_QUEUE_SIZE
 #define CONFIG_MQTT_SAMPLE_TRANSPORT_MESSAGE_QUEUE_SIZE 10
@@ -310,10 +312,12 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 
 		static char txt0[] = "On_MQTT_Publish(): ";
 
-	LOG_INF("%sReceived payload: %.*s on topic: \"%.*s\"", \
-		txt0, \
-		payload.size, payload.ptr, topic.size, topic.ptr);
-
+    LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s ") CLR_B_GREEN("on topic:") "\"" CLR_B_YELLOW("%.*s") "\"", 
+        txt0, 
+        payload.size, 
+        payload.ptr, 
+        topic.size, 
+        topic.ptr);
 
 	/* Extract EPOCH */
 	char *epoch_ptr = strstr(payload.ptr, "\"vt\":\"f\",\"t\":");
@@ -354,10 +358,11 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 			(int)g_telemetry.temperature, \
 			((int)(g_telemetry.temperature * 10)) % 10);
 
-		LOG_INF("%sselected data: Epoch=%lld, Temp=%s",
-			txt0,
-			g_telemetry.epoch,
-			transport_temperature_str);
+        LOG_INF("%s"  CLR_B_GREEN("selected data: ") "Epoch=" CLR_B_YELLOW("%lld") ", Temp=" CLR_B_YELLOW("%s"),
+            txt0,
+            g_telemetry.epoch,
+            transport_temperature_str
+        );
 	} else {
 		g_telemetry.valid = false;
 		g_telemetry.epoch=0;
@@ -380,7 +385,7 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 static void On_MQTT_Suback(__UINT16_TYPE__ messageID, int result)
 {
 	if ((messageID == SUBSCRIBE_TOPIC_ID) && (result == 0))
-		LOG_INF("Subscribed to topic %s", CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC);
+		LOG_INF(CLR_B_GREEN("Subscribed to topic ") "\"%s\"", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC));
 	else if (result)
 		LOG_ERR("Topic subscription failed, error: %d", result);
 	else 
@@ -420,11 +425,11 @@ static void Publish( void )
 		return;
 	}
 
-	LOG_INF( "Published message: \"%.*s\" on topic: \"%.*s\"",
-		param.message.payload.len,
-		param.message.payload.data,
-		param.message.topic.topic.size,
-		param.message.topic.topic.utf8);
+    LOG_INF("Published message: \"%.*s\" on topic: \"" CLR_B_YELLOW("%.*s") "\"",
+        param.message.payload.len,
+        param.message.payload.data,
+        param.message.topic.topic.size,
+        param.message.topic.topic.utf8);
 }
 
 /*! Subscribe makes a new MQTT subscription on the desired topic
@@ -471,7 +476,7 @@ static void Connect_Work( struct k_work *work )
 		.hostname.size = strlen(CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME),
 		//.hostname.ptr = CONFIG_MQTT_HELPER_STATIC_IP_ADDRESS,
 		//.hostname.size = strlen(CONFIG_MQTT_HELPER_STATIC_IP_ADDRESS),
-		.device_id.ptr = clientID,
+		.device_id.ptr = (char *)clientID,
 		.device_id.size = strlen( clientID ),
 	};
 
@@ -555,13 +560,14 @@ static void Connected_Entry(void *o)
     // struct tObject *userObject = o; // Instead next line (advice MS Copilot)
 	ARG_UNUSED(o);
 
-    LOG_INF("Connected to MQTT broker");
-    LOG_INF("Hostname: %s", CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME);
-    LOG_INF("Client ID: %s", clientID);
-    LOG_INF("Port: %d", CONFIG_MQTT_HELPER_PORT);
-    LOG_INF("TLS: %s", IS_ENABLED(CONFIG_MQTT_LIB_TLS) ? "Yes" : "No");
-    LOG_INF("Username: %s", CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME);
-    LOG_INF("Password: %s", CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD);
+    LOG_INF(CLR_B_GREEN("Connected to MQTT broker"));
+    LOG_INF(CLR_B_GREEN("Hostname: ") "%s", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME));
+	LOG_INF(CLR_B_GREEN("Client ID: ") CLR_B_YELLOW("%s"), clientID);
+
+    LOG_INF(CLR_B_GREEN("Port: ") CLR_B_YELLOW("%d"), CONFIG_MQTT_HELPER_PORT);
+    LOG_INF(CLR_B_GREEN("TLS: ") CLR_B_YELLOW("%s"), IS_ENABLED(CONFIG_MQTT_LIB_TLS) ? "Yes" : "No");
+    LOG_INF(CLR_B_GREEN("Username: ") CLR_B_YELLOW("%s"), CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME);
+    LOG_INF(CLR_B_GREEN("Password: ") CLR_B_YELLOW("%s"), CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD);
 
     /* Cancel any ongoing connect work when we enter connected state */
     k_work_cancel_delayable(&connectWork);

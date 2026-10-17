@@ -9,6 +9,10 @@ cmake_minimum_required(VERSION 3.20.0)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(mqtt)
 
+# Register your new global include directory so all modules can find rtt_colors.h
+# Advised by Google AI
+zephyr_include_directories(include)
+
 # Include files that are common for all modules
 add_subdirectory(src/common)
 

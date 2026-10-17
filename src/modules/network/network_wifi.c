@@ -27,6 +27,8 @@ LOG_MODULE_REGISTER(network, CONFIG_MQTT_SAMPLE_NETWORK_LOG_LEVEL);
 /* Next two lines added on advice of MS Copilot */
 #include <stdint.h>
 
+#include <rtt_colors.h>  // The new ansi colors macros file
+
 extern char *net_sprint_ll_addr_buf(const uint8_t *ll, uint8_t ll_len, char *buf, int buflen);
 
 //! Flag related to the shell events on the TCP Server
@@ -143,7 +145,7 @@ struct net_mgmt_event_callback *callback, \
 			return;
 		}
 
-		LOG_INF("Wi-Fi Connected, waiting for IP address");
+		LOG_INF(CLR_B_GREEN("Wi-Fi Connected") ", " CLR_B_YELLOW("waiting for IP address") );
 		Handle_Wifi_Connect_Result( callback );
 		break;
 	case NET_EVENT_WIFI_DISCONNECT_RESULT:
@@ -195,7 +197,7 @@ static void Handle_Net_Events( \
 
 	switch (managementEvent) {
 	case NET_EVENT_IPV4_DHCP_BOUND:
-		LOG_INF("IPv4 address acquired");
+		LOG_INF(CLR_B_GREEN("IPv4 address acquired"));
 		print_dhcp_ip( callback );
 		status = NETWORK_CONNECTED;
 		break;
@@ -260,8 +262,8 @@ static int Cmd_Wifi_Status( void ) {
 		       wifi_mode_txt( status.iface_mode ));
 		LOG_INF( "Link Mode: %s",
 		       wifi_link_mode_txt( status.link_mode ));
-		LOG_INF( "SSID: %-32s", status.ssid );
-		LOG_INF( "BSSID: %-32s",
+		LOG_INF(  CLR_B_GREEN("SSID: ")  CLR_B_YELLOW("%-32s"), status.ssid );
+		LOG_INF( CLR_B_GREEN("BSSID: ") CLR_B_YELLOW("%-32s"),
 			(char *) net_sprint_ll_addr_buf(
 			status.bssid,
 			WIFI_MAC_ADDR_LEN,
@@ -296,7 +298,7 @@ static void Handle_Wifi_Connect_Result(
 	if ( wifiStatus -> status ) {
 		LOG_ERR( "Connection failed (%d)", wifiStatus -> status );
 	} else {
-		LOG_INF( "Connected" );
+		LOG_INF( CLR_B_GREEN("Connected"));
 		context.connected = true;
 	}
 
@@ -346,7 +348,7 @@ static void print_dhcp_ip(struct net_mgmt_event_callback *callback) {
 
 	net_addr_ntop( AF_INET, address, dhcpInfo, sizeof( dhcpInfo ));
 
-	LOG_INF( "DHCP IP address: %s", dhcpInfo );
+	LOG_INF( CLR_B_GREEN("DHCP IP address: ") CLR_B_YELLOW("%s"), dhcpInfo );
 	//ipAssigned = True;
 }
 
@@ -412,7 +414,7 @@ static int Wifi_Connect( void ) {
 	context.connect_result = false;
 	Wifi_Configuration_Reader ( &connectionParameters );
 
-	LOG_INF("SSID: %s", connectionParameters.ssid);
+	LOG_INF(CLR_B_GREEN("SSID: ") CLR_B_YELLOW("%s"), connectionParameters.ssid);
 	LOG_INF("Security: %d", connectionParameters.security);
 
 	int err;
@@ -429,7 +431,7 @@ static int Wifi_Connect( void ) {
 		return err; // -ENOEXEC;
 	}
 
-	LOG_INF( "Connection requested" );
+	LOG_INF( CLR_B_GREEN("Connection requested") );
 	return 0;
 }
 
