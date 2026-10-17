@@ -1,5 +1,5 @@
-## Abluethinginthecloud nrf7002-mqtt-client-example [Here...](https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example),
-## rewritten for a Nordic nRF54LM20-DK
+## nrf7002-mqtt-client-example (from Abluethinginthecloud) [Here...](https://github.com/abluethinginthecloud/nrf7002-mqtt-client-example),
+## reworked for a Nordic nRF54LM20-DK
 
 <div align="center">
 
