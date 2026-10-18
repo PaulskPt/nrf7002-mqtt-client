@@ -12,7 +12,6 @@
 #include "../transport/transport.h"  // Added by Paulus Schulinck (Github @PaulskPt)
 #include <zephyr/logging/log.h>
 
-
 // LOG_MODULE_REGISTER(display, CONFIG_MQTT_SAMPLE_DISPLAY_LOG_LEVEL);
 LOG_MODULE_REGISTER(display, LOG_LEVEL_INF); // Previous line, for text, replaced by this line. On advice MS Copilot
 #include <zephyr/arch/arch_interface.h>
@@ -189,12 +188,13 @@ static void display_reset_oled(void)
 */
 void setContrast()
 {
+	static char txt0[] = "setContrast(): ";
 	int contr = 50;
 	int err = display_set_contrast(display_dev, contr);
 	if (err) {
 		LOG_WRN(" Display set contrast failed (err %d)", err);
 	} else {
-		LOG_INF(" Display contrast successfully initialized to %d", contr);
+		LOG_INF(" %sDisplay contrast successfully initialized to %d", txt0, contr);
 	}
 }
 
@@ -210,7 +210,7 @@ static void print_word_wrapped(const char *text, uint8_t start_row)
     char buffer[128] = {0};
     strncpy(buffer, text, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
-	// LOG_INF("%sGoing to display the text: \'%s\'", txt0, buffer);
+	// LOG_INF("Going to display the text: \'%s\'", buffer);
     char line_buffer[32] = "";
     uint8_t current_row = start_row;
     
@@ -437,7 +437,8 @@ void epoch_to_string(void)
 	snprintf(epoch_str, sizeof(epoch_str), "%" PRId64, g_telemetry.epoch);
 
 	if(my_debug) {
-		LOG_INF("%sepoch_str=\"%s\"", txt0, epoch_str);
+		//LOG_INF("%sepoch_str=\"%s\"", txt0, epoch_str);
+		LOG_INF("Epoch_str=\"%s\"", epoch_str);
 	}
 }
 
@@ -484,7 +485,7 @@ void screen_update_DateTime(void) {
 	if (my_debug) {
 		LOG_INF("%scurrent_epoch: %lld",
 			txt0, (long long)current_epoch);
-		
+
 		LOG_INF("%sUTC running time (epoch): %lld",
 			txt0, (long long)utc_running_time);
 	}
@@ -568,6 +569,7 @@ void screen_update_DateTime(void) {
 				time_str,
 				zone_label);
 		}
+
 		if (strcmp(date_str, date_str_old) != 0) {
 			// Safely overwrite the old buffer with the new contents
 			memcpy(date_str_old, date_str, sizeof(date_str_old));
@@ -605,7 +607,7 @@ void screen_update(void) {
 	uint16_t len_temperature_str;
 
 	/* Handle frame buffer clear while honoring your verified gating filter */
-	// LOG_INF("%slStart=%s", txt0, lStart ? "true" : "false");
+	//LOG_INF("%slStart=%s", txt0, lStart ? "true" : "false");
 
 	if (lStart) {
 		lStart = false;
@@ -619,17 +621,17 @@ void screen_update(void) {
 		ret = cfb_framebuffer_finalize(display_dev);
 
 		if (ret < 0) {
-		    LOG_ERR("cfb_framebuffer_finalize() returned %d", ret);
+		    LOG_ERR("%scfb_framebuffer_finalize() returned %d", txt0, ret);
 			oled_recovery_count++;
-    		LOG_ERR("OLED recovery attempt %u", oled_recovery_count);
+    		LOG_ERR("%sOLED recovery attempt %u", txt0, oled_recovery_count);
 			display_reset_oled();
 			screen_init();
 
 			ret = cfb_framebuffer_finalize(display_dev);
-			LOG_ERR("retry finalize ret=%d", ret);
+			LOG_ERR("%sretry finalize ret=%d", txt0, ret);
 			if ((ret < 0) && (oled_recovery_count >= 3)) {
 
-     			LOG_ERR("OLED recovery failed, rebooting board");
+     			LOG_ERR("%sOLED recovery failed, rebooting board", txt0);
 
 				reboot_board(false); // reboot COLD
     		}
@@ -637,8 +639,8 @@ void screen_update(void) {
 
 				if (oled_recovery_count) {
 
-					LOG_INF("OLED recovered after %u reset attempt(s)",
-							oled_recovery_count);
+					LOG_INF("%sOLED recovered after %u reset attempt(s)",
+							txt0, oled_recovery_count);
 				}
 				oled_recovery_count = 0;
 			}
@@ -766,8 +768,8 @@ void screen_update(void) {
 
 				if (oled_recovery_count) {
 
-					LOG_INF("OLED recovered after %u reset attempt(s)",
-							oled_recovery_count);
+					LOG_INF("%sOLED recovered after %u reset attempt(s)",
+							txt0, oled_recovery_count);
 				}
 				oled_recovery_count = 0;
 			}

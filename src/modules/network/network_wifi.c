@@ -133,7 +133,9 @@ static void Handle_Wifi_Events( \
 static void Handle_Wifi_Events( \
 struct net_mgmt_event_callback *callback, \
 	uint64_t managementEvent, \
-	struct net_if *interface) {
+	struct net_if *interface) 
+	{
+	static char txt0[] = "Handle_Wifi_Events(): ";
 	int err;
 	enum network_status status;
 	const struct wifi_status *wifiStatus = (const struct wifi_status *)callback->info;
@@ -141,15 +143,15 @@ struct net_mgmt_event_callback *callback, \
 	switch ( managementEvent ) {
 	case NET_EVENT_WIFI_CONNECT_RESULT:
 	if (wifiStatus->status) {
-			LOG_INF(" Connection attempt failed, status code: %d", wifiStatus->status);
+			LOG_INF(" %sConnection attempt failed, status code: %d", txt0, wifiStatus->status);
 			return;
 		}
 
-		LOG_INF(CLR_B_GREEN(" Wi-Fi Connected") ", " CLR_B_YELLOW("waiting for IP address") );
+		LOG_INF(" %s" CLR_B_GREEN("Wi-Fi Connected") ", " CLR_B_YELLOW("waiting for IP address"), txt0 );
 		Handle_Wifi_Connect_Result( callback );
 		break;
 	case NET_EVENT_WIFI_DISCONNECT_RESULT:
-		LOG_INF(" Disconnected");
+		LOG_INF(" %sDisconnected", txt0);
 
 		status = NETWORK_DISCONNECTED;
 		Handle_Wifi_Disconnect_Result( callback );
@@ -159,12 +161,12 @@ struct net_mgmt_event_callback *callback, \
 		LOG_ERR("Unknown event: %d", managementEvent);
 	*/
 		/* NEW VERSION */
-		LOG_ERR(" Unknown event: 0x%llx", (unsigned long long)managementEvent);
+		LOG_ERR(" %sUnknown event: 0x%llx", txt0, (unsigned long long)managementEvent);
 		break;
 	}
 	err = zbus_chan_pub(&NETWORK_CHAN, &status, K_SECONDS(1));
 	if (err) {
-		LOG_ERR(" zbus_chan_pub, error: %d", err);
+		LOG_ERR(" %szbus_chan_pub, error: %d", txt0, err);
 		SEND_FATAL_ERROR();
 	}
 }
@@ -191,18 +193,18 @@ static void Handle_Net_Events( \
 	struct net_mgmt_event_callback *callback, \
 	uint64_t managementEvent, \
 	struct net_if *interface) {
-	
+	static char txt0[] = "Handle_Net_Events(): ";
 	int err;
 	enum network_status status;
 
 	switch (managementEvent) {
 	case NET_EVENT_IPV4_DHCP_BOUND:
-		LOG_INF(CLR_B_GREEN(" IPv4 address acquired"));
+		LOG_INF(" %s" CLR_B_GREEN("IPv4 address acquired"), txt0);
 		print_dhcp_ip( callback );
 		status = NETWORK_CONNECTED;
 		break;
 	case NET_EVENT_IPV4_ADDR_DEL:
-		LOG_INF(CLR_B_GREEN(" IPv4 address lost"));
+		LOG_INF(" %s" CLR_B_GREEN("IPv4 address lost"), txt0);
 
 		status = NETWORK_DISCONNECTED;
 		break;
@@ -211,13 +213,13 @@ static void Handle_Net_Events( \
 		LOG_DBG("Unknown event: 0x%08X", managementEvent);
 	*/
 	/* NEW VERSION */
-	LOG_DBG(" Unknown event: 0x%llx", (unsigned long long)managementEvent);
+	LOG_DBG(" %sUnknown event: 0x%llx", txt0, (unsigned long long)managementEvent);
 		return;
 	}
 
 	err = zbus_chan_pub(&NETWORK_CHAN, &status, K_SECONDS(1));
 	if (err) {
-		LOG_ERR(" zbus_chan_pub, error: %d", err);
+		LOG_ERR(" %szbus_chan_pub, error: %d", txt0, err);
 		SEND_FATAL_ERROR();
 	}
 
@@ -231,14 +233,15 @@ static void Handle_Net_Events( \
 * @return int, 0 when the function has ran succesfully
 */
 static int Cmd_Wifi_Status( void ) {
+	static char txt0[] = "Cmd_Wifi_Status(): ";
 	// struct net_if *interface = net_if_get_default();
 	struct net_if *interface = net_if_get_wifi_sta(); // See C:\ncs\v3.4.0\zephyr\samples\net\wifi\apsta_mode
 	// This if() block and LOG_INFO() line added on advice MS Copilot, for investigation WiFi problem
 	if (!interface) {
-		LOG_ERR(" No STA interface!");
+		LOG_ERR(" %sNo STA interface!", txt0);
 		return -ENODEV;
 	}
-	LOG_INF(" Interface = %p", interface);
+	LOG_INF(" %sInterface = %p", txt0, interface);
 
 	struct wifi_iface_status status = { 0 };
 
@@ -248,33 +251,36 @@ static int Cmd_Wifi_Status( void ) {
 		&status,
 		sizeof( struct wifi_iface_status ))) {
 		// LOG_INF("Status request failed");
-		LOG_DBG(" Status request failed");
+		LOG_DBG(" %sStatus request failed", txt0);
 		return -ENOEXEC;
 	}
 
-	LOG_INF( " ==================" );
-	LOG_INF( " State: %s", wifi_state_txt( status.state ) );
+	LOG_INF( " %s==================", txt0 );
+	LOG_INF( " %sState: %s", txt0, wifi_state_txt( status.state ) );
 
 	if ( status.state >= WIFI_STATE_ASSOCIATED ) {
 		uint8_t MACStringBuffer[ sizeof( "xx:xx:xx:xx:xx:xx" )];
 
-		LOG_INF( " Interface Mode: %s",
+		LOG_INF( " %sInterface Mode: %s",
+			   txt0,
 		       wifi_mode_txt( status.iface_mode ));
-		LOG_INF( " Link Mode: %s",
+		LOG_INF( " %sLink Mode: %s",
+			   txt0,
 		       wifi_link_mode_txt( status.link_mode ));
-		LOG_INF(  CLR_B_GREEN(" SSID: ")  CLR_B_YELLOW("%-32s"), status.ssid );
-		LOG_INF( CLR_B_GREEN(" BSSID: ") CLR_B_YELLOW("%-32s"),
+		LOG_INF(" %s" CLR_B_GREEN("SSID: ")  CLR_B_YELLOW("%-32s"), txt0, status.ssid );
+		LOG_INF(" %s" CLR_B_GREEN("BSSID: ") CLR_B_YELLOW("%-32s"),
+		    txt0,
 			(char *) net_sprint_ll_addr_buf(
 			status.bssid,
 			WIFI_MAC_ADDR_LEN,
 			MACStringBuffer,
 			sizeof( MACStringBuffer )));
 		
-		LOG_INF( " Band: %s", wifi_band_txt( status.band ));
-		LOG_INF( " Channel: %d", status.channel );
-		LOG_INF( " Security: %s", wifi_security_txt( status.security ));
-		LOG_INF( " MFP: %s", wifi_mfp_txt( status.mfp ));
-		LOG_INF( " RSSI: %d", status.rssi );
+		LOG_INF( " %sBand: %s", txt0, wifi_band_txt( status.band ));
+		LOG_INF( " %sChannel: %d", txt0, status.channel );
+		LOG_INF( " %sSecurity: %s", txt0, wifi_security_txt( status.security ));
+		LOG_INF( " %sMFP: %s", txt0, wifi_mfp_txt( status.mfp ));
+		LOG_INF( " %sRSSI: %d", txt0, status.rssi );
 	}
 	return 0;
 }
@@ -288,6 +294,7 @@ static int Cmd_Wifi_Status( void ) {
 */
 static void Handle_Wifi_Connect_Result(
 	struct net_mgmt_event_callback *callback) {
+	static char txt0[] = "Handle_Wifi_Connect_Result(): ";
 	const struct wifi_status *wifiStatus =
 							(const struct wifi_status *) callback -> info;
 
@@ -296,9 +303,9 @@ static void Handle_Wifi_Connect_Result(
 	}
 
 	if ( wifiStatus -> status ) {
-		LOG_ERR( " Connection failed (%d)", wifiStatus -> status );
+		LOG_ERR( " %sConnection failed (%d)", txt0, wifiStatus -> status );
 	} else {
-		LOG_INF( CLR_B_GREEN(" Connected"));
+		LOG_INF(" %s" CLR_B_GREEN("Connected"), txt0);
 		context.connected = true;
 	}
 
@@ -314,6 +321,7 @@ static void Handle_Wifi_Connect_Result(
 */
 static void Handle_Wifi_Disconnect_Result(
 	struct net_mgmt_event_callback *callback) {
+		static char txt0[] = "Handle_Wifi_Disconnect_Result(): ";
 		const struct wifi_status *status =
 		( const struct wifi_status * ) callback -> info;
 
@@ -322,12 +330,13 @@ static void Handle_Wifi_Disconnect_Result(
 	}
 
 	if ( context.disconnect_requested ) {
-		LOG_INF( " Disconnection request %s (%d)",
+		LOG_INF( " %sDisconnection request %s (%d)",
+			txt0,
 			status->status ? "failed" : "done",
 			status -> status);
 		context.disconnect_requested = false;
 	} else {
-		LOG_INF( " Received Disconnected" );
+		LOG_INF(" %s" CLR_B_GREEN("Received Disconnected"), txt0);
 		context.connected = false;
 	}
 
@@ -342,13 +351,14 @@ static void Handle_Wifi_Disconnect_Result(
 * @return void
 */
 static void print_dhcp_ip(struct net_mgmt_event_callback *callback) {
+	static char txt0[] = "print_dhcp_ip(): ";
 	const struct net_if_dhcpv4 *dhcpv4 = callback -> info;
 	const struct in_addr *address = &dhcpv4 -> requested_ip;
 	char dhcpInfo[128];
 
 	net_addr_ntop( AF_INET, address, dhcpInfo, sizeof( dhcpInfo ));
 
-	LOG_INF( CLR_B_GREEN(" DHCP IP address: ") CLR_B_YELLOW("%s"), dhcpInfo );
+	LOG_INF(" %s"  CLR_B_GREEN("DHCP IP address: ") CLR_B_YELLOW("%s"), txt0, dhcpInfo );
 	//ipAssigned = True;
 }
 
@@ -360,7 +370,9 @@ static void print_dhcp_ip(struct net_mgmt_event_callback *callback) {
 * @return int, 0 when the function is executed successfully.
 */
 static int Wifi_Configuration_Reader( \
-	struct wifi_connect_req_params *parameters ){
+	struct wifi_connect_req_params *parameters )
+{
+	static char txt0[] = "Wifi_Configuration_Reader(): ";
 	parameters -> timeout = SYS_FOREVER_MS;
 
 	/* SSID */
@@ -384,7 +396,7 @@ static int Wifi_Configuration_Reader( \
 #if !defined( CONFIG_STA_KEY_MGMT_NONE )
 	parameters -> psk = CONFIG_WIFI_CREDENTIALS_STATIC_PASSWORD;
 	parameters -> psk_length = strlen( parameters -> psk );
-	LOG_INF(" PSK length: %d", parameters->psk_length);
+	LOG_INF(" %sPSK length: %d", txt0, parameters->psk_length);
 #endif
 	parameters -> channel = WIFI_CHANNEL_ANY;
 
@@ -399,6 +411,7 @@ static int Wifi_Configuration_Reader( \
 * @return int, 0 when the function is executed successfully.
 */
 static int Wifi_Connect( void ) {
+	static char txt0[] = "Wifi_Connect(): ";
 	// struct net_if *interface = net_if_get_default();
 	struct net_if *interface = net_if_get_wifi_sta(); // from C:\ncs\v3.4.0\zephyr\samples\net\wifi\apsta_mode
 	// This if() block and LOG_INFO() line added on advice MS Copilot, for investigation WiFi problem
@@ -406,7 +419,7 @@ static int Wifi_Connect( void ) {
 		LOG_ERR("No STA interface!");
 		return -ENODEV;
 	}
-	LOG_INF(" Interface = %p", interface);
+	LOG_INF(" %sInterface = %p", txt0, interface);
 
 	static struct wifi_connect_req_params connectionParameters;
 
@@ -414,8 +427,8 @@ static int Wifi_Connect( void ) {
 	context.connect_result = false;
 	Wifi_Configuration_Reader ( &connectionParameters );
 
-	LOG_INF(CLR_B_GREEN(" SSID: ") CLR_B_YELLOW("%s"), connectionParameters.ssid);
-	LOG_INF(" Security: %d", connectionParameters.security);
+	LOG_INF(" %s" CLR_B_GREEN("SSID: ") CLR_B_YELLOW("%s"), txt0, connectionParameters.ssid);
+	LOG_INF(" %sSecurity: %d", txt0, connectionParameters.security);
 
 	int err;
 
@@ -427,11 +440,11 @@ static int Wifi_Connect( void ) {
 				
 	if (err) {
 		// LOG_ERR( "Connection request failed" );  // Old version of the code
-		LOG_ERR(" Connection request failed, err=%d", err);
+		LOG_ERR(" %sConnection request failed, err=%d", txt0, err);
 		return err; // -ENOEXEC;
 	}
 
-	LOG_INF( CLR_B_GREEN(" Connection requested") );
+	LOG_INF(" %s"  CLR_B_GREEN("Connection requested"), txt0 );
 	return 0;
 }
 
@@ -442,6 +455,7 @@ static int Wifi_Connect( void ) {
 *       This function is used on an independent thread.
 */
 void Wifi_Stationing( void ){
+	static char txt0[] = "Wifi_Stationing(): ";
     int i;
 	memset( &context, 0, sizeof( context ));
 
@@ -460,12 +474,13 @@ void Wifi_Stationing( void ){
 
 	net_mgmt_add_event_callback( &netEventsCallback );
 
-	LOG_INF( " Starting %s with CPU frequency: %d MHz", \
-			CONFIG_BOARD, SystemCoreClock/MHZ( 1 ));
+	LOG_INF( " %sStarting %s with CPU frequency: %d MHz", \
+			txt0, CONFIG_BOARD, SystemCoreClock/MHZ( 1 ));
 			
 	k_sleep( K_SECONDS( 1 ));
 
-	LOG_INF( " Static IP address (overridable): %s/%s -> %s", \
+	LOG_INF( " %sStatic IP address (overridable): %s/%s -> %s", \
+		txt0,
 		CONFIG_NET_CONFIG_MY_IPV4_ADDR, \
 		CONFIG_NET_CONFIG_MY_IPV4_NETMASK, \
 		CONFIG_NET_CONFIG_MY_IPV4_GW );     
@@ -482,11 +497,11 @@ void Wifi_Stationing( void ){
 			}
 		}
 		if ( context.connected ) {
-			LOG_INF( " ============" );
+			//LOG_INF( " ============" );
 			k_sleep( K_FOREVER );
 		}
 		else if ( !context.connect_result ) {
-			LOG_ERR( " Connection Timed Out" );
+			LOG_ERR( " %sConnection Timed Out", txt0 );
 		}
 
 	}

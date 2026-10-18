@@ -34,6 +34,8 @@ static void fade_thread_handler(void *p1, void *p2, void *p3)
     ARG_UNUSED(p2);
     ARG_UNUSED(p3);
 
+    static char txt0[] = "fade_thread_handler(): ";
+
     if (!pwm_is_ready_dt(&led2_pwm)) {
         LOG_ERR(" PWM device for LED 2 is not ready");
         return;
@@ -47,7 +49,7 @@ static void fade_thread_handler(void *p1, void *p2, void *p3)
         // Wait until led_fade_set_state(true) signals this semaphore
         k_sem_take(&toggle_sem, K_FOREVER);
 
-        LOG_INF(" LED 2 fading effect started");
+        LOG_INF(" %sLED 2 fading effect started", txt0);
 
         while (running) {
             // 1. Fade In
@@ -72,7 +74,7 @@ static void fade_thread_handler(void *p1, void *p2, void *p3)
 
         // Clean up hardware when execution state drops out
         pwm_set_pulse_dt(&led2_pwm, 0);
-        LOG_INF(" LED 2 fading effect stopped");
+        LOG_INF(" %sLED 2 fading effect stopped", txt0);
     }
 }
 

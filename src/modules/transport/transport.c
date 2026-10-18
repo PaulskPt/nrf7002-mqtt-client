@@ -384,6 +384,7 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 
 			LOG_INF("%s" CLR_B_GREEN("Received payload: ") CLR_B_YELLOW("%.*s"), txt0, header_len, payload.ptr);
 			LOG_INF("%s" CLR_B_YELLOW("%.*s") CLR_B_GREEN(" on topic: ") "\"" CLR_B_YELLOW("%.*s") "\"", txt0, reads_len, reads_ptr, topic.size, topic.ptr);
+
 		}
 	} 
 	else {
@@ -402,8 +403,8 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 			(int)g_telemetry.temperature, \
 			((int)(g_telemetry.temperature * 10)) % 10);
 
-        LOG_INF("%s"  CLR_B_GREEN("selected data") ", " CLR_B_GREEN("Epoch: ") CLR_B_YELLOW("%lld") ", " CLR_B_GREEN("Temp: ") CLR_B_YELLOW("%s"),
-            txt0,
+        LOG_INF("%s" CLR_B_GREEN("selected data") ", " CLR_B_GREEN("Epoch: ") CLR_B_YELLOW("%lld") ", " CLR_B_GREEN("Temp: ") CLR_B_YELLOW("%s"),
+		    txt0,
             g_telemetry.epoch,
             transport_temperature_str
         );
@@ -428,12 +429,13 @@ static void On_MQTT_Publish(struct mqtt_helper_custom_buf topic,
 // static void On_MQTT_Suback(uint16_t messageID, int result)
 static void On_MQTT_Suback(__UINT16_TYPE__ messageID, int result)
 {
+	static char txt0[] = "On_MQTT_Suback(): ";
 	if ((messageID == SUBSCRIBE_TOPIC_ID) && (result == 0))
-		LOG_INF(CLR_B_GREEN("Subscribed to topic: ") "\"%s\"", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC));
+		LOG_INF("%s" CLR_B_GREEN("Subscribed to topic: ") "\"%s\"", txt0, CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_SUBSCRIBE_TOPIC));
 	else if (result)
-		LOG_ERR("Topic subscription failed, error: %d", result);
+		LOG_ERR("%sTopic subscription failed, error: %d", txt0, result);
 	else 
-		LOG_WRN("Subscribed to unknown topic, id: %d", messageID);
+		LOG_WRN("%sSubscribed to unknown topic, id: %d", txt0, messageID);
 }
 
 
@@ -443,12 +445,13 @@ static void On_MQTT_Suback(__UINT16_TYPE__ messageID, int result)
  */
 static void Publish( void )
 {
+	static char txt0[] = "Publish(): ";
 	/* Check if publishing is disabled via Kconfig */
     if (!IS_ENABLED(CONFIG_MQTT_SAMPLE_TRANSPORT_DO_PUBLISH)) {
 		if (!PUBLISH_LOG_MSG_SENT) {
 			/* Only log once */
 			PUBLISH_LOG_MSG_SENT = true;
-	        LOG_WRN("Publishing is disabled by configuration.");
+	        LOG_WRN("%sPublishing is disabled by configuration.", txt0);
 		}
         return; // Return early
     }
@@ -465,11 +468,12 @@ static void Publish( void )
 
 	err = MQTT_Helper_custom_Publish( &param );
 	if ( err ) {
-		LOG_WRN( "Failed to send payload, err: %d", err );
+		LOG_WRN( "%sFailed to send payload, err: %d", txt0, err );
 		return;
 	}
 
-    LOG_INF("Published message: \"%.*s\" on topic: \"" CLR_B_YELLOW("%.*s") "\"",
+    LOG_INF("%sPublished message: \"%.*s\" on topic: \"" CLR_B_YELLOW("%.*s") "\"",
+	    txt0,
         param.message.payload.len,
         param.message.payload.data,
         param.message.topic.topic.size,
@@ -482,6 +486,7 @@ static void Publish( void )
  */
 static void Subscribe( void )
 {
+	static char txt0[] = "Subscribe(): ";
 	int err;
 	struct mqtt_topic topics[] = {
 		{
@@ -497,7 +502,7 @@ static void Subscribe( void )
 
 	err = MQTT_Helper_Custom_Subscribe( &list );
 	if ( err ) {
-		LOG_ERR( "Failed to subscribe to topics, error: %d", err );
+		LOG_ERR( "%sFailed to subscribe to topics, error: %d", txt0, err );
 		return;
 	}
 }
@@ -513,7 +518,7 @@ static void Subscribe( void )
 static void Connect_Work( struct k_work *work )
 {
 	ARG_UNUSED( work );
-
+	static char txt0[] = "Connect_Work(): ";
 	int err;
 	struct mqtt_helper_custom_conn_params conn_params = {
 		.hostname.ptr = CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME,
@@ -526,7 +531,7 @@ static void Connect_Work( struct k_work *work )
 
 	err = MQTT_Helper_Custom_Connect( &conn_params );
 	if ( err ) {
-		LOG_ERR( "Failed connecting to MQTT, error code: %d", err );
+		LOG_ERR("%sFailed connecting to MQTT, error code: %d", txt0, err );
 	}
 	
 	k_work_reschedule_for_queue( 
@@ -601,17 +606,18 @@ static enum smf_state_result Disconnected_Run( void *o )
 // Function changed on advice MS Copilot
 static void Connected_Entry(void *o)
 {
+	static char txt0[] = "Connected_Entry(): ";
     // struct tObject *userObject = o; // Instead next line (advice MS Copilot)
 	ARG_UNUSED(o);
 
-    LOG_INF(CLR_B_GREEN("Connected to MQTT broker"));
-    LOG_INF(CLR_B_GREEN("Hostname: ") "%s", CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME));
-	LOG_INF(CLR_B_GREEN("Client ID: ") CLR_B_YELLOW("%s"), clientID);
+    LOG_INF("%s" CLR_B_GREEN("Connected to MQTT broker"), txt0);
+    LOG_INF("%s" CLR_B_GREEN("Hostname: ") CLR_B_YELLOW(CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_HOSTNAME), txt0);
+	LOG_INF("%s" CLR_B_GREEN("Client ID: ") CLR_B_YELLOW("%s"), txt0, clientID);
 
-    LOG_INF(CLR_B_GREEN("Port: ") CLR_B_YELLOW("%d"), CONFIG_MQTT_HELPER_PORT);
-    LOG_INF(CLR_B_GREEN("TLS: ") CLR_B_YELLOW("%s"), IS_ENABLED(CONFIG_MQTT_LIB_TLS) ? "Yes" : "No");
-    LOG_INF(CLR_B_GREEN("Username: ") CLR_B_YELLOW("%s"), CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME);
-    LOG_INF(CLR_B_GREEN("Password: ") CLR_B_YELLOW("%s"), CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD);
+    LOG_INF("%s" CLR_B_GREEN("Port: ") CLR_B_YELLOW("%d"), txt0, CONFIG_MQTT_HELPER_PORT);
+    LOG_INF("%s" CLR_B_GREEN("TLS: ") CLR_B_YELLOW("%s"), txt0, IS_ENABLED(CONFIG_MQTT_LIB_TLS) ? "Yes" : "No");
+    LOG_INF("%s" CLR_B_GREEN("Username: ") CLR_B_YELLOW("%s"), txt0, CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_USERNAME);
+    LOG_INF("%s" CLR_B_GREEN("Password: ") CLR_B_YELLOW("%s"), txt0, CONFIG_MQTT_SAMPLE_TRANSPORT_BROKER_PASSWORD);
 
     /* Cancel any ongoing connect work when we enter connected state */
     k_work_cancel_delayable(&connectWork);
@@ -658,9 +664,10 @@ static enum smf_state_result Connected_Run( void *o )
 */
 static void Connected_Exit(void *o)
 {
+	static char txt0[] = "Connected_Exit(): ";
 	ARG_UNUSED(o);
 
-	LOG_INF("Disconnected from MQTT broker");
+	LOG_INF("%sDisconnected from MQTT broker", txt0);
 }
 
 
@@ -690,6 +697,7 @@ static const struct smf_state sState[] = {
 *		and publication.
 */
 static void Transport_Task(void *p1, void *p2, void *p3) {
+	static char txt0[] = "Transport_Task(): ";
 	int err;
 	const struct zbus_channel *channel;
 	enum network_status status;
@@ -727,7 +735,7 @@ static void Transport_Task(void *p1, void *p2, void *p3) {
 
 	err = MQTT_Helper_Custom_Initializer( &config );
 	if ( err ) {
-		LOG_ERR( "MQTT_Helper_Custom_Initializer, error: %d", err );
+		LOG_ERR( "%sMQTT_Helper_Custom_Initializer, error: %d", txt0, err );
 		SEND_FATAL_ERROR();
 		return;
 	}
@@ -744,7 +752,7 @@ static void Transport_Task(void *p1, void *p2, void *p3) {
 
 			err = zbus_chan_read( &NETWORK_CHAN, &status, K_SECONDS( 1 ));
 			if ( err ) {
-				LOG_ERR( "zbus_chan_read, error: %d", err );
+				LOG_ERR( "%szbus_chan_read, error: %d", txt0, err );
 				SEND_FATAL_ERROR();
 				return;
 			}
@@ -753,7 +761,7 @@ static void Transport_Task(void *p1, void *p2, void *p3) {
 
 			err = smf_run_state( SMF_CTX(&sObject ));
 			if ( err ) {
-				LOG_ERR( "smf_run_state, error: %d", err );
+				LOG_ERR( "%ssmf_run_state, error: %d", txt0, err );
 				SEND_FATAL_ERROR();
 				return;
 			}
@@ -763,7 +771,7 @@ static void Transport_Task(void *p1, void *p2, void *p3) {
 
 			err = zbus_chan_read( &PAYLOAD_CHAN, &payload, K_SECONDS( 1 ));
 			if ( err ) {
-				LOG_ERR( "zbus_chan_read, error: %d", err );
+				LOG_ERR( "%szbus_chan_read, error: %d", txt0, err );
 				SEND_FATAL_ERROR();
 				return;
 			}
@@ -772,7 +780,7 @@ static void Transport_Task(void *p1, void *p2, void *p3) {
 
 			err = smf_run_state( SMF_CTX( &sObject ));
 			if ( err ) {
-				LOG_ERR( "smf_run_state, error: %d", err );
+				LOG_ERR( "%ssmf_run_state, error: %d", txt0, err );
 				SEND_FATAL_ERROR();
 				return;
 			}
