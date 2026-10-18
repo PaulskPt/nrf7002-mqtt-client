@@ -386,9 +386,9 @@ void update_datetime_from_system_clock(void) {
  * @brief Call this function whenever you successfully receive a new 
  * Epoch timestamp string or integer from your MQTT callback.
  */
-void Set_system_from_epoch(void) 
+void SetSysFmEpoch(void) 
 {
-	static char txt0[] = "  Set_system_from_epoch(): ";
+	static char txt0[] = "  SetSysFmEpoch(): ";
 	if (g_telemetry.epoch <= 0)
 		return;
 
@@ -446,8 +446,8 @@ void epoch_to_string(void)
  * @brief updates the global date_str and time_str variables 
  * from the received telemetry epoch value
  */
-void Screen_update_DateTime(void) {
-	static char txt0[] = "  Screen_update_DateTime(): ";
+void Update_DateTime(void) {
+	static char txt0[] = "  Update_DateTime(): ";
 
 	/* RAW INCOMING EPOCH STRING DISPLAY: Shifted from Row 96 up to Row 32 */
 
@@ -848,7 +848,7 @@ void Display_Task(void *p1, void *p2, void *p3) {
 			last_epoch = g_telemetry.epoch;
 
 	 		if (g_telemetry.epoch > 0) {
-				Set_system_from_epoch();
+				SetSysFmEpoch();
 				/* set epoch_str, date_str and time_str */
 				epoch_to_string();
 				strcpy(last_epoch_str, epoch_str);
@@ -856,14 +856,14 @@ void Display_Task(void *p1, void *p2, void *p3) {
 					// Update datetime only wen new epoch received (once a minute)
 					if (g_telemetry.valid) {
 						telemetry_inf(); 
-						Screen_update_DateTime();
+						Update_DateTime();
 					}
 				}
 			}
 		} else {
 			/* Update datetime every second */
 			if (use_running_time) {
-				Screen_update_DateTime();
+				Update_DateTime();
 			}
 			
 		}
