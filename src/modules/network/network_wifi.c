@@ -97,7 +97,7 @@ static void Handle_Wifi_Disconnect_Result(
 					events callback
 * @return void
 */
-static void print_dhcp_ip(struct net_mgmt_event_callback *callback);
+static void Print_dhcp_ip(struct net_mgmt_event_callback *callback);
 
 /*! Wifi_Configuration_Reader reads the configuration arguments recorded on
 * the configuration file, and stores them on a struct.
@@ -199,12 +199,12 @@ static void Handle_Net_Events( \
 
 	switch (managementEvent) {
 	case NET_EVENT_IPV4_DHCP_BOUND:
-		LOG_INF(" %s" CLR_B_GREEN("IPv4 address acquired"), txt0);
-		print_dhcp_ip( callback );
+		LOG_INF("  %s" CLR_B_GREEN("IPv4 address acquired"), txt0);
+		Print_dhcp_ip( callback );
 		status = NETWORK_CONNECTED;
 		break;
 	case NET_EVENT_IPV4_ADDR_DEL:
-		LOG_INF(" %s" CLR_B_GREEN("IPv4 address lost"), txt0);
+		LOG_INF("  %s" CLR_B_GREEN("IPv4 address lost"), txt0);
 
 		status = NETWORK_DISCONNECTED;
 		break;
@@ -213,16 +213,15 @@ static void Handle_Net_Events( \
 		LOG_DBG("Unknown event: 0x%08X", managementEvent);
 	*/
 	/* NEW VERSION */
-	LOG_DBG(" %sUnknown event: 0x%llx", txt0, (unsigned long long)managementEvent);
+	LOG_DBG("  %sUnknown event: 0x%llx", txt0, (unsigned long long)managementEvent);
 		return;
 	}
 
 	err = zbus_chan_pub(&NETWORK_CHAN, &status, K_SECONDS(1));
 	if (err) {
-		LOG_ERR(" %szbus_chan_pub, error: %d", txt0, err);
+		LOG_ERR("  %szbus_chan_pub, error: %d", txt0, err);
 		SEND_FATAL_ERROR();
 	}
-
 }
 
 
@@ -350,15 +349,15 @@ static void Handle_Wifi_Disconnect_Result(
 					events callback
 * @return void
 */
-static void print_dhcp_ip(struct net_mgmt_event_callback *callback) {
-	static char txt0[] = "print_dhcp_ip(): ";
+static void Print_dhcp_ip(struct net_mgmt_event_callback *callback) {
+	static char txt0[] = "Print_dhcp_ip(): ";
 	const struct net_if_dhcpv4 *dhcpv4 = callback -> info;
 	const struct in_addr *address = &dhcpv4 -> requested_ip;
 	char dhcpInfo[128];
 
 	net_addr_ntop( AF_INET, address, dhcpInfo, sizeof( dhcpInfo ));
 
-	LOG_INF(" %s"  CLR_B_GREEN("DHCP IP address: ") CLR_B_YELLOW("%s"), txt0, dhcpInfo );
+	LOG_INF("  %s"  CLR_B_GREEN("DHCP IP address: ") CLR_B_YELLOW("%s"), txt0, dhcpInfo );
 	//ipAssigned = True;
 }
 
